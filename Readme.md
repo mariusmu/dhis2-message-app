@@ -1,6 +1,8 @@
 # DHIS2 Message app
 This project is associated with the course INF5057 at the University of Oslo.
 
+Note: This respository only contains the message app. The social sharing app will have its own respository
+
 This app is made for the DHIS2 platform, and will add extra functionality
 to the message feature.
 
