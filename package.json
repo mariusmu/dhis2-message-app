@@ -3,7 +3,7 @@
   "description": "Messaging app for the DHIS2 platform, that supports image and file uploads",
   "version": "0.0.1",
   "scripts": {
-    "start": "",
+    "start": "node webpack-server.js",
     "build": "webpack -p"
   },
   "dependencies": {
