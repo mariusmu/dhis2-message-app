@@ -3,12 +3,12 @@ import ReactDom from 'react-dom';
 import {Router, Link, Route, browserHistory} from 'react-router';
 
 import { Provider } from 'react-redux';
-import { createStore, combineReducers } from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux' 
-import MessageReducer from './Reducers/message.reducer';
+import thunk from 'redux-thunk';
+import LoginReducer from './Reducers/login.reducer';
 
-import StartComponent from './Components/Start'
-import Next from './Components/Next';
+import Next from 'components/Next';
 
 function mapStateToProps (state,props) {
     return {
@@ -17,10 +17,14 @@ function mapStateToProps (state,props) {
     };
 }
 
-const store = createStore(combineReducers({
-    start : MessageReducer,
-    routing: routerReducer
-}));
+const middleWare = [thunk];
+
+const store = createStore (
+    combineReducers({
+        oAuthToken : LoginReducer,
+        routing: routerReducer
+        }),
+    applyMiddleware(...middleWare));
 
 const history = syncHistoryWithStore(browserHistory, store);
 
@@ -31,8 +35,7 @@ const history = syncHistoryWithStore(browserHistory, store);
 ReactDom.render((
    <Provider store={store}>
     <Router history={history}>
-        <Route path="/" component={StartComponent}/>
-        <Route path="next" component={Next}/>
+        <Route path="/" component={Next}/>
     </Router>
     </Provider>
 ), document.getElementById("app"));
