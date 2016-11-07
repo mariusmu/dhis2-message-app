@@ -14,7 +14,12 @@ devConf.module.loaders = [
         test: /\.less$/,
         loader: "style!css!less",
         exclude: /node_modules/,
-    }];
+    },
+    { 
+        test: /\.json$/,
+        loader: "json-loader",
+    }
+    ];
 devConf.plugins= [
         new hwp({
             template: 'index.tpl.html',

@@ -1,4 +1,5 @@
-
+const path = require('path');
+const srcPath = path.resolve(__dirname, "./app");
 
 module.exports = {
     context : __dirname + "/app",
@@ -21,16 +22,29 @@ module.exports = {
                     test: /\.less$/,
                     loader: 'style!css!less',                    
                     exclude: /node_modules/,
+                },
+                  { 
+                     test: /\.json$/,
+                    loader: "json-loader",
                 }
 
             ]
         },
     resolve: {
-        extensions: ['', '.js', '.jsx']
+        extensions: ['', '.js', '.jsx'],
+        alias: {
+            "components" : srcPath + "/Components/",
+            "constants" : srcPath + "/Constants/",
+            "services" : srcPath + "/Services/",
+            "style" : srcPath + "/Style/",
+            "reducers" : srcPath + "/Reducers/",
+            "actions" : srcPath + "/Actions/"
+        }
     },
-    alias: {
-        "Components" : __dirname + "/app/Components"
-    }
-
-
+    node: {
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty'
+},
 }
+
