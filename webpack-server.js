@@ -8,7 +8,13 @@ const rht = require('react-hot-loader/webpack');
 const hwp = require('html-webpack-plugin');
 let devConf = baseConf;
 
-devConf.module.loaders = [{ test: /\.(jsx|js)?$/, loader: 'babel-loader', include: path.join(__dirname, 'app') }];
+devConf.module.loaders = [
+    { test: /\.(jsx|js)?$/, loader: 'babel-loader', include: path.join(__dirname, 'app') },
+    {
+        test: /\.less$/,
+        loader: "style!css!less",
+        exclude: /node_modules/,
+    }];
 devConf.plugins= [
         new hwp({
             template: 'index.tpl.html',
