@@ -1,10 +1,16 @@
 # DHIS2 Message app
 This project is associated with the course INF5057 at the University of Oslo.
 
-Note: This respository only contains the message app. The social sharing app will have its own respository
+# Please look at the branches
+We use branching to split the different apps
+* Master (Shared functionality)
+* message-app: The message (file upload) app
+* sharing-app: The social sharing app
 
+# About
 This app is made for the DHIS2 platform, and will add extra functionality
 to the message feature.
+
 
 # Main goal
 Add support for embedding images and files onto messages sent by users.
