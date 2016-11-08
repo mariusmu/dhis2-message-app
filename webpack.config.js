@@ -24,7 +24,8 @@ module.exports = {
     },
     alias: {
         "Components" : __dirname + "/app/Components"
-    }
+    },
+    watch: true
 
 
 }
