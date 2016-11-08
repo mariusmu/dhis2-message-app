@@ -8,7 +8,7 @@ import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 import thunk from 'redux-thunk';
 import LoginReducer from './Reducers/login.reducer';
 
-import Next from 'components/Next';
+import Login from 'components/Login/Login';
 
 function mapStateToProps (state,props) {
     return {
@@ -35,7 +35,7 @@ const history = syncHistoryWithStore(browserHistory, store);
 ReactDom.render((
    <Provider store={store}>
     <Router history={history}>
-        <Route path="/" component={Next}/>
+        <Route path="/" component={Login}/>
     </Router>
     </Provider>
 ), document.getElementById("app"));
