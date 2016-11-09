@@ -10,6 +10,7 @@ module.exports = {
         path: __dirname + "/dist/assets"
 
     },
+    devtool: 'source-map',
     module: {
             loaders: [
                 {
