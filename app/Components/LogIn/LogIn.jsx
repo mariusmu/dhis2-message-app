@@ -3,26 +3,26 @@ import {checkForOAuth, logOut} from "actions/oauth.action";
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import ErrorDisplay from 'components/common/error-display';
-import LoggedIn from 'components/Login/LoggedIn/LoggedIn';
-import LoginForm from 'components/Login/LoginForm/LoginForm';
+import LoggedIn from 'components/Login/LoginSuccess/LoggedIn';
+import LoginForm from 'components/Login/Form/LoginForm';
 
 class Login extends React.Component {
-    
+
     constructor() {
         super();
         this.state = {};
         this.state.login = [];
         this.logout = this.logout.bind(this);
-        
+
     }
 
     componentDidMount() {
         checkForOAuth()(this.props.dispatch);
-        
+
     }
     componentWillReceiveProps(props) {
     }
-   
+
     render() {
         let errorComponents = [];
         {
@@ -32,7 +32,7 @@ class Login extends React.Component {
         )};
 
         return (
-            this.props.oAuthStatus === "OK" ? <LoggedIn logOut={this.logout}/> : <LoginForm cid={this.props.oauth_client_id} dispatch={this.props.dispatch}/> 
+            this.props.oAuthStatus === "OK" ? <LoggedIn logOut={this.logout}/> : <LoginForm cid={this.props.oauth_client_id} dispatch={this.props.dispatch}/>
         )
     }
 
