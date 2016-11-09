@@ -1,9 +1,10 @@
 import React from 'react';
-import {checkForOAuth, logOut} from "actions/login.action";
+import {checkForOAuth, logOut} from "actions/oauth.action";
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import ErrorDisplay from 'components/common/error-display';
-import LoginForm from 'components/Login/Form/LoginForm';
+import LoggedIn from 'components/Login/LoggedIn/LoggedIn';
+import LoginForm from 'components/Login/LoginForm/LoginForm';
 
 class Login extends React.Component {
     
@@ -17,25 +18,21 @@ class Login extends React.Component {
 
     componentDidMount() {
         checkForOAuth()(this.props.dispatch);
-        console.log(LoginForm);
+        
     }
-
     componentWillReceiveProps(props) {
-        console.log("Did receive props", props);
     }
+   
     render() {
         let errorComponents = [];
         {
-            this.props.oAuthError.forEach((val, id) => {
+            this.props.login_errors.forEach((val, id) => {
                 errorComponents.push(<ErrorDisplay error={val} key={id + "err"}/>);
             }
         )};
-        let loggedInForm = <div>
-        <h1>You are logged in</h1>
-            <a onClick={this.logout}>Log out</a>
-        </div>;
+
         return (
-            this.props.oAuthStatus === "OK" ? loggedInForm : <LoginForm dispatch={this.props.dispatch}/> 
+            this.props.oAuthStatus === "OK" ? <LoggedIn logOut={this.logout}/> : <LoginForm cid={this.props.oauth_client_id} dispatch={this.props.dispatch}/> 
         )
     }
 
@@ -43,16 +40,16 @@ class Login extends React.Component {
         logOut()(this.props.dispatch);
     }
 
-
 }
-
 
 function mapStateToProps(state, ownprops) {
     console.log(state);
     return {
-        oAuthToken: state.oAuthToken.oAuthToken,
-        oAuthError: state.oAuthToken.oAuthError,
-        oAuthStatus: state.oAuthToken.oAuthStatus
+        refresh_token: state.login.refresh_token,
+        login_errors: state.login.login_errors,
+        login_status: state.login.login_status,
+        oauth_status: state.oAuthClient.oAuthStatus,
+        oauth_client_id: state.oAuthClient.oAuthClientId
     };
 }
 
