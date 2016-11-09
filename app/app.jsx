@@ -4,11 +4,13 @@ import {Router, Link, Route, browserHistory} from 'react-router';
 
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
-import { syncHistoryWithStore, routerReducer } from 'react-router-redux' 
+import { syncHistoryWithStore } from 'react-router-redux' 
 import thunk from 'redux-thunk';
-import LoginReducer from './Reducers/login.reducer';
 
+import {rootReducer} from './Reducers/root.reducer'
 import Login from 'components/Login/Login';
+import oAuth from 'components/oAuth/oAuth';
+import Message from 'components/Message/Message'
 
 function mapStateToProps (state,props) {
     return {
@@ -20,10 +22,7 @@ function mapStateToProps (state,props) {
 const middleWare = [thunk];
 
 const store = createStore (
-    combineReducers({
-        oAuthToken : LoginReducer,
-        routing: routerReducer
-        }),
+    rootReducer,
     applyMiddleware(...middleWare));
 
 const history = syncHistoryWithStore(browserHistory, store);
@@ -35,7 +34,9 @@ const history = syncHistoryWithStore(browserHistory, store);
 ReactDom.render((
    <Provider store={store}>
     <Router history={history}>
-        <Route path="/" component={Login}/>
+        <Route path="/" component={oAuth}/>
+        <Route path="login" component={Login}/>
+        <Route path="message" component={Message}/>
     </Router>
     </Provider>
 ), document.getElementById("app"));
@@ -44,7 +45,15 @@ ReactDom.render((
  * Not sure if this is needed. Has been before
  */
 if(module.hot) {
-    module.hot.accept();
+    
+     module.hot.accept('reducers/root.reducer', () => {
+         console.warn("Hot module repl");   
+      let newRootReducer = require('./Reducers/root.reducer').rootReducer;
+      console.log("Store", store);
+      store.replaceReducer(newRootReducer);
+    });
 };
+
+
 
 require("./Style/main.less");
