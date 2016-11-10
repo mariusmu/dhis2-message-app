@@ -10,7 +10,7 @@ class AllMessages extends React.Component {
     render() {
         let messages = [];
         this.props.messages.map((val, id) => {
-            messages.push(<MessageLine message={val} selectMessage={this.props.selectMessage} key={id + "message"}/>);
+            messages.push(<MessageLine message={val} users={this.props.users} selectMessage={this.props.selectMessage} key={id + "message"}/>);
         });
 
         return(
