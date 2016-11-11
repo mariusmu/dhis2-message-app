@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Button, Modal, Row, Tooltip, Overlay } from 'react-bootstrap';
+import { Button, Modal, Row, Tooltip, Overlay, FormControl, Image } from 'react-bootstrap';
 import $ from 'jquery';
 
 
@@ -27,10 +27,35 @@ class ShareButton extends React.Component {
                     <Button ref="target" onClick={this._toggle.bind(this)}>
                         <i className="fa fa-share-alt"/>
                     </Button>
-
                     <Overlay {...sharedProps} placement="bottom">
-                        <Tooltip id="overload-bottom"><a className="fa fa-facebook" ></a><a className="fa fa-twitter" onClick={this._uploadTwitter}></a></Tooltip>
+                        <Tooltip id="overload-bottom">
+                            <a id="fbtooltip" className="fa fa-facebook fa-lg" onClick={this._open.bind(this)}/>
+                            <a className="fa fa-twitter fa-lg" onClick={this._open.bind(this)}/>
+                        </Tooltip>
                     </Overlay>
+
+                    <Modal show={this.state.showModal} onHide={this._close.bind(this)}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Share your content</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Row>
+                                <Image id="sharedImgModal" src="https://play.dhis2.org/demo/api/charts/LW0O27b7TdD/data" rounded />
+                            </Row>
+
+                            <div id="modalQuestion">Add your comment:</div>
+                            <Row bsClass="text-center">
+                                <form>
+                                    <textarea className="form-control" rows="3"/>
+                                </form>
+                            </Row>
+
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button onClick={this._close.bind(this)}>Close</Button>
+                        </Modal.Footer>
+                    </Modal>
+
                 </div>
                 );
     }
@@ -45,26 +70,27 @@ class ShareButton extends React.Component {
         this.setState({ show: !this.state.show });
     }
 
-    _uploadTwitter(){
-        $.ajax({
-            type: "POST",
-            url: "https://api.twitter.com/1.1/statuses/update.json",
-            data: {
-                status: "hello!!!!"
-            },
-            success: function () {
-                console.log("SUCCESSSS");
-            },
-            error: function (e) {
-                console.log(e);
-            }
-        })
-    }
-
 }
 
 module.exports = ShareButton;
 
+/*
+ _uploadTwitter(){
+ $.ajax({
+ type: "POST",
+ url: "https://api.twitter.com/1.1/statuses/update.json",
+ data: {
+ status: "hello!!!!"
+ },
+ success: function () {
+ console.log("SUCCESSSS");
+ },
+ error: function (e) {
+ console.log(e);
+ }
+ })
+ }
+ */
 
 /*
  <div id="ZBjCfSaLSqD">
