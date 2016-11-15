@@ -41,7 +41,7 @@ class ShareButton extends React.Component {
                         </Modal.Header>
                         <Modal.Body>
                             <Row>
-                                <Image id="sharedImgModal" src="https://play.dhis2.org/demo/api/charts/LW0O27b7TdD/data" rounded />
+                                <Image id="sharedImgModal" src="https://play.dhis2.org/demo/api/maps/ZBjCfSaLSqD/data?width=800" rounded />
                             </Row>
 
                             <div id="modalQuestion">Add your comment:</div>
@@ -76,12 +76,15 @@ class ShareButton extends React.Component {
     }
     _uploadFacebook(){
 
+        var comment = this.state.comment;
+        var close = this._close();
+
         FB.login(function () {
             FB.api(
                 '/me/feed',
                 'post',
                 {
-                    message: this.state.comment,
+                    message: comment,
                     link: "https://play.dhis2.org/demo/api/maps/ZBjCfSaLSqD/data?width=800"
                 },
                 function (response) {
@@ -94,7 +97,7 @@ class ShareButton extends React.Component {
                             'Error: ' + response.error.message;
                     } else {
                         //TODO Success
-                        this._close();
+                        close
                     }
                 }
             );
