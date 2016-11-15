@@ -24,9 +24,9 @@ class ShareButton extends React.Component {
 
         return (
                 <div>
-                    <Button ref="target" onClick={this._toggle.bind(this)}>
+                    <a onClick={this._toggle.bind(this)}>
                         <i className="fa fa-share-alt"/>
-                    </Button>
+                    </a>
                     <Overlay {...sharedProps} placement="bottom">
                         <Tooltip id="overload-bottom">
 
