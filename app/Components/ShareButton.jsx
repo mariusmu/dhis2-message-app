@@ -29,6 +29,7 @@ class ShareButton extends React.Component {
                     </Button>
                     <Overlay {...sharedProps} placement="bottom">
                         <Tooltip id="overload-bottom">
+
                             <a id="fbtooltip" className="fa fa-facebook fa-lg" onClick={this._open.bind(this)}/>
                             <a className="fa fa-twitter fa-lg" onClick={this._open.bind(this)}/>
                         </Tooltip>
@@ -52,7 +53,8 @@ class ShareButton extends React.Component {
 
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button onClick={this._close.bind(this)}>Close</Button>
+                            <Button onClick={this._close.bind(this)}>Cancel</Button>
+                            <Button onClick={this._uploadFacebook.bind(this)}>Publish</Button>
                         </Modal.Footer>
                     </Modal>
 
@@ -68,6 +70,35 @@ class ShareButton extends React.Component {
     }
     _toggle() {
         this.setState({ show: !this.state.show });
+    }
+    _uploadFacebook(){
+
+        FB.login(function () {
+            FB.api(
+                '/me/feed',
+                'post',
+                {
+                    message: 'Hello, world!',
+                    link: "https://play.dhis2.org/demo/api/maps/ZBjCfSaLSqD/data?width=800"
+                },
+                function (response) {
+                    if (!response) {
+                        //TODO NOT SUCESS
+                        alert('Error occurred.');
+                    } else if (response.error) {
+                        //TODO NOT SUCESS
+                        document.getElementById('result').innerHTML =
+                            'Error: ' + response.error.message;
+                    } else {
+                        //TODO Success
+                        this._close();
+                    }
+                }
+            );
+        }, {scope: 'publish_actions'});
+
+        //Call function to close the modal
+
     }
 
 }
