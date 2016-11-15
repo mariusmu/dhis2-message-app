@@ -10,7 +10,7 @@ import $ from 'jquery';
 class ShareButton extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { showModal: false, show: false };
+        this.state = { showModal: false, show: false, comment: 'Your comment'};
     }
 
 
@@ -47,7 +47,7 @@ class ShareButton extends React.Component {
                             <div id="modalQuestion">Add your comment:</div>
                             <Row bsClass="text-center">
                                 <form>
-                                    <textarea className="form-control" rows="3"/>
+                                    <textarea className="form-control" rows="3" value={this.state.comment} onChange={this._handle_comment_change.bind(this)}/>
                                 </form>
                             </Row>
 
@@ -71,6 +71,9 @@ class ShareButton extends React.Component {
     _toggle() {
         this.setState({ show: !this.state.show });
     }
+    _handle_comment_change(event){
+        this.setState({comment: event.target.value});
+    }
     _uploadFacebook(){
 
         FB.login(function () {
@@ -78,7 +81,7 @@ class ShareButton extends React.Component {
                 '/me/feed',
                 'post',
                 {
-                    message: 'Hello, world!',
+                    message: this.state.comment,
                     link: "https://play.dhis2.org/demo/api/maps/ZBjCfSaLSqD/data?width=800"
                 },
                 function (response) {
@@ -102,6 +105,10 @@ class ShareButton extends React.Component {
     }
 
 }
+
+ShareButton.propTypes = {
+    comment: React.PropTypes.string
+};
 
 module.exports = ShareButton;
 
