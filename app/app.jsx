@@ -1,16 +1,13 @@
 import React from 'react';
 import ReactDom from 'react-dom';
-import {Router, Link, Route, browserHistory} from 'react-router';
 
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
-import { syncHistoryWithStore } from 'react-router-redux' 
 import thunk from 'redux-thunk';
 
 import {rootReducer} from './Reducers/root.reducer'
-import Login from 'components/Login/Login';
-import oAuth from 'components/oAuth/oAuth';
 import Message from 'components/Message/Message'
+import WriteMessage from 'components/Message/WriteMessage/WriteMessage';
 
 function mapStateToProps (state,props) {
     return {
@@ -25,20 +22,32 @@ const store = createStore (
     rootReducer,
     applyMiddleware(...middleWare));
 
-const history = syncHistoryWithStore(browserHistory, store);
+
+function findAction() {
+        let url = window.location.href;
+        let actionIndex = url.lastIndexOf(".action");
+        let lastTrailling = url.substring(0, actionIndex).lastIndexOf("/");
+        return url.substring(lastTrailling + 1, actionIndex);
+    }
 
 
+let action = findAction();
+let activeComponent = <div/>;
+switch(action) {
+    case "readMessage":
+        activeComponent = <Message/>;
+        break
+    case "showSendMessage":
+        activeComponent = <WriteMessage/>;
+        break;
+}
 /**
  * Route different urls to different Components
  */
 ReactDom.render((
-   <Provider store={store}>
-    <Router history={history}>
-        <Route path="/" component={oAuth}/>
-        <Route path="login" component={Login}/>
-        <Route path="message" component={Message}/>
-    </Router>
-    </Provider>
+    <Provider store={store}>
+        {activeComponent}
+   </Provider>
 ), document.getElementById("app"));
 
 /**
@@ -56,4 +65,4 @@ if(module.hot) {
 
 
 
-require("./Style/main.less");
+//require("./Style/main.less");
