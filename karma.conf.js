@@ -1,3 +1,6 @@
+const path = require('path');
+const srcPath = path.resolve(__dirname, "./app");
+const webpackConfig = require('./webpack.config.js');
 module.exports = function (cnf) {
     cnf.set({
         frameworks: ['jasmine', 'browserify'],
@@ -7,16 +10,11 @@ module.exports = function (cnf) {
         ],
         'basePath': '',
         preprocessors: {
-            'tests/**/*.spec.js': ['browserify']
+            './app/app.jsx': ['webpack'],
+            'tests/**/*.spec.js': ['webpack']
         },
-        babelPreprocessor: {
-            options: {
-                "presets": ["es2015"]
-            }
-        },
-        webpack: {
-
-        },
+ 
+ 
         proxies: {
             'app': 'base/app'
         },
@@ -27,13 +25,19 @@ module.exports = function (cnf) {
             'karma-babel-preprocessor',
             'karma-chrome-launcher',
             'karma-jasmine',
-            'karma-browserify'
+            'karma-browserify',
+            require('karma-webpack')
         ],
+        webpack: webpackConfig,
+        webpackMiddleware: {
+            noInfo: true
+        },
         browsers: ['Chrome'],
         browserify: {
             debug: true,
-            transform: [ 'babelify' ]
+            transform: ['babelify']
         },
+        
         concurrency: Infinity
     });
 }
