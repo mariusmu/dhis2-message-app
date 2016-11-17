@@ -1,5 +1,4 @@
 'use strict'
-
 const path = require('path');
 const webpack = require('webpack');
 const devServer = require('webpack-dev-server');
@@ -15,12 +14,17 @@ devConf.module.loaders = [
         loader: "style!css!less",
         exclude: /node_modules/,
     },
+    {
+        test: /\.css$/,
+        loader: "style-loader!css-loader",
+       
+    },
     { 
         test: /\.json$/,
         loader: "json-loader",
     }
     ];
-devConf.plugins= [
+devConf.plugins = [
         new hwp({
             template: 'index.tpl.html',
             inject: 'body',
