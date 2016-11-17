@@ -1,4 +1,6 @@
-import req from 'request-promise';
+//import req from 'request-promise';
+import cookie from 'react-cookie';
+import 'whatwg-fetch'
 
 class ApiService {
     
@@ -9,8 +11,10 @@ class ApiService {
      * @param json boolean
      */
     createOptions(uri, method, json) {
+        
         const contentType = json === true ? 'application/json' : 'application/x-www-form-urlencoded'
         return {
+            credentials: 'same-origin',
             method: method,
             uri: uri,
             headers: {
@@ -21,18 +25,31 @@ class ApiService {
     }
 
 
-    /**
-     * POST to Api as an unauthenticated user
-     * @param json the json object to post
-     * @param uri the uri to post to
-     * @param b64 base64 authentication token
-     */
-    unauthenticatedPost(json, uri, b64) {
-        let options = this.createOptions(uri, "POST", true);
-        options.body = json;
-        options.headers.Authorization = "Basic " + b64;
-        return req(options);
-    };
+    // /**
+    //  * POST to Api as an unauthenticated user
+    //  * @param json the json object to post
+    //  * @param uri the uri to post to
+    //  * @param b64 base64 authentication token
+    //  */
+    // unauthenticatedPost(json, uri, b64) {
+    //     let options = this.createOptions(uri, "POST", true);
+    //     options.body = json;
+    //     if(b64) options.headers.Authorization = "Basic " + b64;
+    //     return req(options);
+    // };
+
+    // /**
+    //  * POST to Api as an unauthenticated user
+    //  * @param form object the form object to post
+    //  * @param uri the uri to post to
+    //  * @param b64 base64 authentication token
+    //  */
+    // unauthenticatedFormPost(form, uri, b64) {
+    //     let options = this.createOptions(uri, "POST", false);
+    //     options.form = form;
+    //     if(b64) options.headers.Authorization = "Basic " + b64;
+    //     return req(options);
+    // };
 
     /**
      * POST to Api as an unauthenticated user
@@ -40,13 +57,12 @@ class ApiService {
      * @param uri the uri to post to
      * @param b64 base64 authentication token
      */
-    unauthenticatedFormPost(form, uri, b64) {
+    authenticatedFormPost(form, uri, token) {
         let options = this.createOptions(uri, "POST", false);
-        options.form = form;
-        options.headers.Authorization = "Basic " + b64;
-        return req(options);
+        options.body = form;
+        if(token) options.headers.Authorization = "Bearer " + token
+        return fetch(uri, options);
     };
-
     /**
      * POST to Api as an authenticated client
      * @param json the json object to POST
@@ -55,19 +71,29 @@ class ApiService {
      */
     authenticatedPost(json, uri, token) {
         let options = this.createOptions(uri, "POST", true);
-        options.headers.token = token;
-        options.body = JSON.stringify(json);
-        return req(options);
+        if(token) options.headers.Authorization = "Bearer " + token;
+        options.body = json;
+        
+        return fetch(uri, options);
     }
 
-    /**
-     * GET request to api as an unauthenticated user
-     * @param uri the url to the endpoint
-     */
-    unauthenticatedGet(uri) {
-        let options = this.createOptions(uri, "GET", false);
-        return req(options);
+    authenticatedFilePost(file, uri, token) {
+        let options = this.createOptions(uri, "POST", false);
+        if(token) options.headers.Authorization = "Bearer " + token;
+        options.headers['Content-Type'] = "multipart/form-data;boundary=--file"
+        options.form = { file : file};
+        
+        return fetch(uri, options);
     }
+
+    // /**
+    //  * GET request to api as an unauthenticated user
+    //  * @param uri the url to the endpoint
+    //  */
+    // unauthenticatedGet(uri) {
+    //     let options = this.createOptions(uri, "GET", false);
+    //     return req(options);
+    // }
 
        /**
      * GET request to api as an unauthenticated user
@@ -75,9 +101,9 @@ class ApiService {
      */
     authenticatedGet(uri, token) {
         let options = this.createOptions(uri, "GET", false);
-        options.headers.Authorization = "Bearer " + token;
-
-        return req(options);
+        if(token) options.headers.Authorization = "Bearer " + token;
+        console.log(options);
+        return fetch(uri, options);
     }
 }
 
