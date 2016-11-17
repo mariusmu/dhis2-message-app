@@ -24,13 +24,25 @@ module.exports = function (state = InitialState.messages, action) {
                 /** Find the correct message in the state message array 
                  * Then assign a conversation field with 
                  */
-                messageArr.filter(val => { return val.id == action.messageId})
-                    [0].conversations = action.messages;
+                let message = messageArr.filter(val => 
+                    { return val.id == action.messageId})[0];
+                if(message) {
+                    message.conversations = action.messages;
+                } else {
+                    message = action.fullMessage;
+                    messageArr = messageArr.concat(message);
+                    console.log("Just concated", message);
+                }
                     
                 return Object.assign({}, state, {
                     messages: messageArr
                 });
             }
+        
+        case ActionConstants.CONVERSATION_POST_ERROR:
+            return Object.assign({}, state, {
+                conversation_post_error: action.error
+        });
 
         case ActionConstants.SELECT_MESSAGE:
             if (action.id) {
