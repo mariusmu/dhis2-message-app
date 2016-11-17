@@ -1,19 +1,20 @@
 import React from 'react';
-import { fetchAllConversations, unSelectMessage } from 'actions/message.action';
+import { postConversation, fetchAllConversations, unSelectMessage } from 'actions/message.action';
 import Conversation from 'components/Message/ReadMessage/Conversation/conversation';
 import NameLink from 'components/Message/ReadMessage/name-link';
+import WriteResponse from 'components/Message/ReadMessage/Conversation/write-response';
+import { fetchAllUsers } from 'actions/user.action';
+
 
 class ReadMessage extends React.Component {
     constructor(props) {
         super(props);
         this.goBack = this.goBack.bind(this);
-        this.click = this.click.bind(this);
         this.state = {};
-        this.props.message.conversations = [];
         this.state.conversations = [];
         this.state.toNames = [];
         this.appendToName = this.appendToName.bind(this);
-        fetchAllConversations(this.props.message.id)(this.props.dispatch);
+        this.reply = this.reply.bind(this);
 
     }
 
@@ -25,44 +26,56 @@ class ReadMessage extends React.Component {
      */
     appendToName(name) {
         if (name) {
-           let updatedNameList = this.state.toNames;
-           if(updatedNameList.indexOf(name) < 0)
+            let updatedNameList = this.state.toNames;
+            if (updatedNameList.indexOf(name) < 0)
                 updatedNameList.push(name);
-           this.setState({ toNames: updatedNameList });
+            this.setState({ toNames: updatedNameList });
         }
+    }
+
+
+    /**
+     * Write conversation for a message
+     * @param   message the message to post
+     * @param internal whether this is an internal reply
+     */
+    reply(message, internal, attachments) {
+        console.log(this.props.message);
+        postConversation(this.props.message.id, message, internal, attachments)(this.props.dispatch)
+            .then(() =>
+                fetchAllConversations(this.props.message.id)(this.props.dispatch)
+            );
+    }
+
+    componentDidMount() {
+        fetchAllConversations(this.props.message.id)(this.props.dispatch);
+
     }
 
     render() {
         let conversations = [];
-        this.props.message.conversations.map((val, id) => {
-            conversations.push(<Conversation appendToName={this.appendToName} users={this.props.users} conversation={val} key={id + "conv"} />);
-        });
+        if (this.props.message && this.props.message.conversations) {
+            this.props.message.conversations.map((val, id) => {
+                conversations.push(<Conversation dipatch={this.props.dispatch} appendToName={this.appendToName} users={this.props.users} conversation={val} key={id + "conv"} />);
+            });
+        }
 
         let toFullNames = [];
         this.state.toNames.map((val, id) => {
-            toFullNames.push(<NameLink name={val} key={id + "name"}/>);
+            toFullNames.push(<NameLink name={val} key={id + "name"} />);
         });
 
         return (
-
-            <div className="container">
-                
-                <div className="messageTopDiv horizontalMenu">
-                    <ul>
-                        <li><button onClick={this.goBack} className="greyButtonLink">Go back</button></li>
-                    </ul>
-                </div>
-
-                <h3>{this.props.message.subject}</h3>
+            <div className="">
+            
                 <div className="recipientsDiv">
                     <span className="pull-left to-desc">To: </span>
                     {toFullNames}
                 </div>
-                <br/>
-                {conversations}
+                <br />
+                    {conversations}
+                <WriteResponse shouldRefresh={true} allowInternalReply={true} replyAction={this.reply} />
             </div>
-
-
         )
     }
 
