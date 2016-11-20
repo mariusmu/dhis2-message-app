@@ -10,13 +10,12 @@ import ShareButton from './ShareButton';
 class Widget extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { source:''};
+        this.state = { source:'',type:this.props.type};
     }
 
 
     render(){
-        var source = 'http://' + this.props.username + ':' + this.props.password + '@192.168.189.1:8082/api/maps/'+ this.props.id+'/data';
-        console.log(source);
+        var source = 'http://' + this.props.username + ':' + this.props.password + '@192.168.189.1:8082/api/'+this.state.type+'/'+ this.props.id+'/data';
         return (
             <div className="widgetImg">
                 <div className="panel panel-default">
@@ -34,6 +33,9 @@ class Widget extends React.Component {
                 </div>
             </div>
         );
+    }
+    componentWillReceiveProps(nextProps){
+        this.setState({type:nextProps.type});
     }
     // componentWillMount(){
     //     this.setState({source:source});
