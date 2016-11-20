@@ -24,6 +24,8 @@ class ShareButton extends React.Component {
 
         };
 
+        var source = 'http://192.168.189.1:8082/api/maps/'+this.props.id+'/data';
+
         return (
                 <div>
                     <a onClick={this._toggle.bind(this)}>
@@ -43,7 +45,7 @@ class ShareButton extends React.Component {
                         </Modal.Header>
                         <Modal.Body>
                             <Row>
-                                <Image id="sharedImgModal" src="https://play.dhis2.org/demo/api/maps/ZBjCfSaLSqD/data?width=800" rounded />
+                                <Image id="sharedImgModal" src={source} rounded />
                             </Row>
 
                             <div id="modalQuestion">Add your comment:</div>
@@ -130,48 +132,3 @@ ShareButton.propTypes = {
 
 module.exports = ShareButton;
 
-/*
- _uploadTwitter(){
- $.ajax({
- type: "POST",
- url: "https://api.twitter.com/1.1/statuses/update.json",
- data: {
- status: "hello!!!!"
- },
- success: function () {
- console.log("SUCCESSSS");
- },
- error: function (e) {
- console.log(e);
- }
- })
- }
- */
-
-/*
- <div id="ZBjCfSaLSqD">
- <Button bsStyle="primary" onClick={this._open.bind(this)} ><i className="fa fa-share-alt fa-3x"/></Button>
-
- </div>
-
-
- <Modal show={this.state.showModal} onHide={this._close.bind(this)}>
- <Modal.Header closeButton>
- <Modal.Title>Share your content</Modal.Title>
- </Modal.Header>
- <Modal.Body>
- <div id="modalQuestion">On which social media would you like to share?</div>
- <Row bsClass="text-center">
- <Button className="btnSocialShare" id="btnFacebook" type="button"><img className="imgShareBtn" id="imgFacebook" src="/app/src/facebook.png"/></Button>
- </Row>
- <Row bsClass="text-center">
- <Button className="btnSocialShare" id="btnTwitter" type="button"><img className="imgShareBtn" id="imgTwitter" src="/app/src/twitter.png"/></Button>
- </Row>
-
-
- </Modal.Body>
- <Modal.Footer>
- <Button onClick={this._close.bind(this)}>Close</Button>
- </Modal.Footer>
- </Modal>
- */

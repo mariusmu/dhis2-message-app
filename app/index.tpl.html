@@ -4,6 +4,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="stylesheet" href="/app/Style/modal.css">
+        <link rel="stylesheet" href="/app/Style/simple-sidebar.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
@@ -16,16 +17,86 @@
 
     </head>
     <body>
-        <div id="app"></div>
 
-        <div class="fb-messengermessageus"
-             messenger_app_id="1409544869075027"
-             page_id="207194423062400"
-             color="blue"
-             size="standard" >
+    <div id="wrapper" class="">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#">
+                        Share your data
+                    </a>
+                </li>
+                <li>
+                    <a href="#">Dashboard</a>
+                </li>
+                <li>
+                    <a href="#">Charts</a>
+                </li>
+                <li>
+                    <a href="#">Maps</a>
+                </li>
+                <li>
+                    <a href="#">Pivot Table</a>
+                </li>
+                <li>
+                    <a href="#">About</a>
+                </li>
+            </ul>
         </div>
+        <!-- /#sidebar-wrapper -->
 
-        <div class="fb-send" data-href="https://play.dhis2.org/demo/api/maps/ZBjCfSaLSqD/data"></div>
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Favorite Charts</h1>
+                    </div>
+                </div>
+                <div id="app"></div>
 
-        <div class="fb-like" data-href="https://www.facebook.com/DHIS-Community-207194423062400/" data-layout="standard" data-action="like" data-size="large" data-show-faces="true" data-share="true"></div>    </body>
+                <div id="imgGen"></div>
+
+                <div class="fb-messengermessageus"
+                     messenger_app_id="1409544869075027"
+                     page_id="207194423062400"
+                     color="blue"
+                     size="standard" >
+                </div>
+
+                <div class="fb-send" data-href="https://play.dhis2.org/demo/api/maps/ZBjCfSaLSqD/data"></div>
+
+                <div class="fb-like" data-href="https://www.facebook.com/DHIS-Community-207194423062400/" data-layout="standard" data-action="like" data-size="large" data-show-faces="true" data-share="true"></div>
+
+
+
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted">Place sticky footer content here.</p>
+        </div>
+    </footer>
+    <!-- /#wrapper -->
+
+
+
+    <!-- Menu Toggle Script -->
+    <script>
+        $("#menu-toggle").click(function(e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });
+    </script>
+
+
+    </body>
+
+
 </html>

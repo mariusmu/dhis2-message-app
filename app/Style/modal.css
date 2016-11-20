@@ -28,3 +28,13 @@
 #sharedImgModal{
     width: 550px;
 }
+
+.widgetImgTest{
+    width: 100%;
+}
+
+.widgetImg{
+    display:inline-block;
+    width: 40%;
+    margin-right: 70px;
+}
