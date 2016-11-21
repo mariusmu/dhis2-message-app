@@ -19,8 +19,10 @@ Currently we have only implemented functionality to get the app run with React.
 - NodeJS
 
 ## Steps
-1. run  ``` npm install ```
-2. run ``` npm run start ```
+1. First rename app/Constants/SecretConstants_base.js to SecretConstants.js
+2. Add the neccessary values to the SecretConstant.js file
+3. run  ``` npm install ```
+4. run ``` npm run start ```
 
 # To build
 ```npm run build```
