@@ -1,6 +1,6 @@
 const path = require('path');
 const srcPath = path.resolve(__dirname, "./app");
-const webpackConfig = require('./webpack.config.js');
+const webpackConfig = require('./webpack-config/test.js');
 module.exports = function (cnf) {
     cnf.set({
         frameworks: ['jasmine', 'browserify'],
