@@ -10,9 +10,8 @@ to the message feature.
 Add support for embedding images and files onto messages sent by users.
 
 # Current status
-Currently we have only implemented functionality to get the app run with React.
-
-
+- Everything is completely implemented is working.
+- Testing needs to be done
 # To run
 
 ## Technologies you will need
