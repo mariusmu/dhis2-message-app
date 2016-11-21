@@ -20,7 +20,9 @@ class Message extends React.Component {
     findId(url) {
         let idIndex = url.lastIndexOf("id=");
         if(idIndex < 0) return null;
+        console.log("Find id");
         return url.substring(idIndex+3);
+        
     }
 
     componentDidMount() {

@@ -24,6 +24,7 @@ devConf.module.loaders = [
         loader: "json-loader",
     }
     ];
+    devConf.externals = [],
 devConf.plugins = [
         new hwp({
             template: 'index.tpl.html',
