@@ -1,4 +1,4 @@
-# DHIS2 Message app
+# Message app
 This project is associated with the course INF5057 at the University of Oslo.
 
 # Please look at the branches
@@ -26,4 +26,5 @@ Again, please look at the different branches to see the updates
 # To run
 You don't want to run the files on this branch. Rather go to the other branches for getting
 information on how to run.
+
 
