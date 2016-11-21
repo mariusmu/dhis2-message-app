@@ -16,6 +16,7 @@ class Conversation extends React.Component {
         return this.props.users
             .filter((val) => {return val.id == this.props.conversation.sender.id})[0];
     }
+    
 
     uploadFile(form) {
         form.preventDefault();
