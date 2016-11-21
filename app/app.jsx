@@ -27,7 +27,9 @@ function findAction() {
         let url = window.location.href;
         let actionIndex = url.lastIndexOf(".action");
         let lastTrailling = url.substring(0, actionIndex).lastIndexOf("/");
-        return url.substring(lastTrailling + 1, actionIndex);
+        let uri = url.substring(lastTrailling + 1, actionIndex);
+        console.log(uri);
+        return uri;
     }
 
 
@@ -54,7 +56,7 @@ ReactDom.render((
  * Not sure if this is needed. Has been before
  */
 if(module.hot) {
-    
+    require('./Style/main.less');
      module.hot.accept('reducers/root.reducer', () => {
          console.warn("Hot module repl");   
       let newRootReducer = require('./Reducers/root.reducer').rootReducer;
