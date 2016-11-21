@@ -3,9 +3,10 @@ This project is associated with the course INF5057 at the University of Oslo.
 
 # Please look at the branches
 We use branching to split the different apps
-* Master (Shared functionality)
+* Master (info)
 * message-app: The message (file upload) app
 * sharing-app: The social sharing app
+* shared: the basic setup
 
 # About
 This app is made for the DHIS2 platform, and will add extra functionality
