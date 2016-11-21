@@ -60,7 +60,10 @@ class ApiService {
     authenticatedFormPost(form, uri, token) {
         let options = this.createOptions(uri, "POST", false);
         options.body = form;
-        if(token) options.headers.Authorization = "Bearer " + token
+        if(token) {
+            delete options.credentials;
+            options.headers.Authorization = "Bearer " + token;
+        }
         return fetch(uri, options);
     };
     /**
@@ -71,7 +74,10 @@ class ApiService {
      */
     authenticatedPost(json, uri, token) {
         let options = this.createOptions(uri, "POST", true);
-        if(token) options.headers.Authorization = "Bearer " + token;
+        if(token) {
+            delete options.credentials;
+            options.headers.Authorization = "Bearer " + token;
+        }
         options.body = json;
         
         return fetch(uri, options);
@@ -79,7 +85,10 @@ class ApiService {
 
     authenticatedFilePost(file, uri, token) {
         let options = this.createOptions(uri, "POST", false);
-        if(token) options.headers.Authorization = "Bearer " + token;
+        if(token) {
+            delete options.credentials;
+            options.headers.Authorization = "Bearer " + token;
+        }
         options.headers['Content-Type'] = "multipart/form-data;boundary=--file"
         options.form = { file : file};
         
@@ -100,8 +109,11 @@ class ApiService {
      * @param uri the url to the endpoint
      */
     authenticatedGet(uri, token) {
-        let options = this.createOptions(uri, "GET", false);
-        if(token) options.headers.Authorization = "Bearer " + token;
+        let options = this.createOptions(uri, "GET", true);
+        if(token) {
+            delete options.credentials;
+            options.headers.Authorization = "Bearer " + token;
+        }
         console.log(options);
         return fetch(uri, options);
     }
