@@ -49,7 +49,7 @@ class Parent extends React.Component {
         var  username = 'admin',
             password = 'district',
            // url = 'http://' + username + ':' + password + '@192.168.189.1:8082/api/maps.json';
-            url = 'http://192.168.189.1:8082/api/'+type+'.json';
+            url = 'http://localhost:8082/api/'+type+'.json';
 
         console.log(url);
 

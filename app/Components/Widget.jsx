@@ -15,7 +15,7 @@ class Widget extends React.Component {
 
 
     render(){
-        var source = 'http://' + this.props.username + ':' + this.props.password + '@192.168.189.1:8082/api/'+this.state.type+'/'+ this.props.id+'/data';
+        var source = 'http://' + this.props.username + ':' + this.props.password + '@localhost:8082/api/'+this.state.type+'/'+ this.props.id+'/data';
         return (
             <div className="widgetImg">
                 <div className="panel panel-default">
@@ -23,7 +23,7 @@ class Widget extends React.Component {
                         <i className="fa fa-bar-chart-o fa-fw"></i> Area Chart Example
                         <div className="pull-right">
                             <div className="btn-group">
-                                <ShareButton id={this.props.id}/>
+                                <ShareButton id={this.props.id} type={this.state.type}/>
                             </div>
                         </div>
                     </div>

@@ -42,3 +42,55 @@
 #typeTitle{
     margin-bottom: 30px;
 }
+
+#sharedImgModal{
+    width: 550px;
+}
+
+#modal{
+    z-index: 1500;
+}
+
+#fade {
+    display: none;
+    position:absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: #ababab;
+    z-index: 1001;
+    -moz-opacity: 0.8;
+    opacity: .70;
+    filter: alpha(opacity=80);
+}
+
+#modal1 {
+    display: none;
+    position: absolute;
+    top: 45%;
+    left: 45%;
+    width: 100px;
+    height: 100px;
+    padding:20px 15px 0px;
+    box-shadow:1px 1px 10px #ababab;
+    border-radius:20px;
+    background-color: white;
+    z-index: 1002;
+    text-align:center;
+    overflow: auto;
+}
+
+#loader{
+    width: 80%;
+}
+
+
+#loading{
+    width: 10%;
+    margin: auto;
+}
+
+#image_share_modal{
+    text-align: center;
+}
