@@ -17,14 +17,14 @@ class Parent extends React.Component {
         console.log("coucou c'est moi");
         console.log(self.state.type);
         return(
-            <div>
+            <div id="mainContent">
                 <Row>
                     <div id="typeTitle" className="col-lg-12">
                         <h1>Favorite {self.state.type}</h1>
                     </div>
                 </Row>
                <div>
-                   {this.state.data.map(function(val){ return <Widget username="admin" password="district" id={val.id} type={self.state.type} key={Math.random()}/>;})}
+                   {this.state.data.map(function(val){ return <Widget username="admin" password="district" id={val.id} name={val.name} type={self.state.type} key={Math.random()}/>;})}
                </div>
             </div>
         );
