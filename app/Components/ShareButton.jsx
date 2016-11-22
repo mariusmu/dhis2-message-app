@@ -68,7 +68,6 @@ class ShareButton extends React.Component {
         const sharedProps = {
             show: this.state.show,
             container: this,
-
         };
 
         var source = 'http://localhost:8082/api/'+this.props.type+'/'+this.props.id+'/data';
@@ -118,6 +117,8 @@ class ShareButton extends React.Component {
         this.setState({ showModal: false});
     }
     _open(social){
+        //close tooltip
+        this.setState({show:false});
         console.log(social);
         this.setState({ showModal: true, social:social });
     }
