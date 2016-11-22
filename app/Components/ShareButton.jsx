@@ -147,6 +147,9 @@ class ShareButton extends React.Component {
 
         var comment = this.state.comment;
 
+        var close = this._close();
+
+
 
 
         const contentType = 'image/png';
@@ -187,10 +190,12 @@ class ShareButton extends React.Component {
                 var str = JSON.stringify(data, null, 2);
                 //$('#result').html("Success\n" + str).show()
                 console.log("Success\n" + str);
+                close;
             }).fail(function(e){
                 var errorTxt = JSON.stringify(e, null, 2)
                 //$('#result').html("Error\n" + errorTxt).show()
                 console.log("Error\n" + errorTxt);
+
             });
 
 
@@ -199,6 +204,8 @@ class ShareButton extends React.Component {
     _uploadFacebook(){
 
         var comment = this.state.comment;
+        var close = this._close();
+
 
         const contentType = 'image/png';
 
@@ -255,6 +262,7 @@ class ShareButton extends React.Component {
                             console.log("Posted to facebook");
                             $("#modal1").hide();
                             $("#fade").hide();
+                            close;
                         }
                     });
                 }
