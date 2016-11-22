@@ -20,7 +20,7 @@ class Widget extends React.Component {
             <div className="widgetImg">
                 <div className="panel panel-default">
                     <div className="panel-heading">
-                        <i className="fa fa-bar-chart-o fa-fw"></i> Area Chart Example
+                        <i className="fa fa-bar-chart-o fa-fw"></i> {this.props.name}
                         <div className="pull-right">
                             <div className="btn-group">
                                 <ShareButton id={this.props.id}/>

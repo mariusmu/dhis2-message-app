@@ -28,12 +28,11 @@ class ShareButton extends React.Component {
 
         return (
                 <div>
-                    <a onClick={this._toggle.bind(this)}>
+                    <a id="btnShare" onClick={this._toggle.bind(this)}>
                         <i className="fa fa-share-alt"/>
                     </a>
                     <Overlay {...sharedProps} placement="bottom">
                         <Tooltip id="overload-bottom">
-
                             <a id="fbtooltip" className="fa fa-facebook fa-lg" onClick={this._open.bind(this, 'fb')}/>
                             <a className="fa fa-twitter fa-lg" onClick={this._open.bind(this, 'tw')}/>
                         </Tooltip>

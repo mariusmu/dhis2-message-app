@@ -26,10 +26,10 @@ class Menu extends React.Component {
                         <a id="charts" href="#Charts" onClick={this.handleChanges.bind(this)}>Charts</a>
                     </li>
                     <li>
-                        <a id="pivots" href="#Pivot">Pivot Table</a>
+                        <a id="reportTables" href="#Pivot" onClick={this.handleChanges.bind(this)}>Pivot Table</a>
                     </li>
                     <li>
-                        <a href="#About">About</a>
+                        <a id="about" href="#About" onClick={this.handleChanges.bind(this)}>About</a>
                     </li>
                 </ul>
             </div>
