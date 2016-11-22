@@ -20,16 +20,16 @@ class Menu extends React.Component {
                         </a>
                     </li>
                     <li>
-                        <a id="maps" href="#Maps" onClick={this.handleChanges.bind(this)}>Maps</a>
+                        <a id="maps" href="#" onClick={this.handleChanges.bind(this)}>Maps</a>
                     </li>
                     <li>
-                        <a id="charts" href="#Charts" onClick={this.handleChanges.bind(this)}>Charts</a>
+                        <a id="charts" href="#" onClick={this.handleChanges.bind(this)}>Charts</a>
                     </li>
                     <li>
-                        <a id="reportTables" href="#Pivot" onClick={this.handleChanges.bind(this)}>Pivot Table</a>
+                        <a id="reportTables" href="#" onClick={this.handleChanges.bind(this)}>Pivot Table</a>
                     </li>
                     <li>
-                        <a id="about" href="#About" onClick={this.handleChanges.bind(this)}>About</a>
+                        <a id="about" href="#" onClick={this.handleChanges.bind(this)}>About</a>
                     </li>
                 </ul>
             </div>
