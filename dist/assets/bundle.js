@@ -45658,6 +45658,8 @@
 
 	            var comment = this.state.comment;
 
+	            var close = this._close();
+
 	            var contentType = 'image/png';
 
 	            var img = new Image();
@@ -45692,6 +45694,7 @@
 	                    var str = JSON.stringify(data, null, 2);
 	                    //$('#result').html("Success\n" + str).show()
 	                    console.log("Success\n" + str);
+	                    close;
 	                }).fail(function (e) {
 	                    var errorTxt = JSON.stringify(e, null, 2);
 	                    //$('#result').html("Error\n" + errorTxt).show()
@@ -45704,6 +45707,7 @@
 	        value: function _uploadFacebook() {
 
 	            var comment = this.state.comment;
+	            var close = this._close();
 
 	            var contentType = 'image/png';
 
@@ -45756,6 +45760,7 @@
 	                                console.log("Posted to facebook");
 	                                (0, _jquery2.default)("#modal1").hide();
 	                                (0, _jquery2.default)("#fade").hide();
+	                                close;
 	                            }
 	                        });
 	                    } catch (e) {
