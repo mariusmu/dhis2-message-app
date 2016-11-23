@@ -65,7 +65,7 @@ class MultiPart extends React.Component {
         }
         const self = this;
         if(foundId > -1) {
-            deleteFile(filesUploaded[foundId].path_display)
+            deleteFile(filesUploaded[foundId].id)
                 .then(res => {
                     filesUploaded.splice(foundId, 1);
                     if(filesUploaded == null) filesUploaded = [];
