@@ -8,6 +8,10 @@ We use branching to split the different apps
 * sharing-app: The social sharing app
 * shared: the basic setup
 
+# We have also created
+  ... a file server (used in the message app). This is located in
+  [github.com/mariusmu/dhis2-jmo-fileserver](https://github.com/mariusmu/dhis2-jmo-fileserver)
+
 # About
 This app is made for the DHIS2 platform, and will add extra functionality
 to the message feature.
