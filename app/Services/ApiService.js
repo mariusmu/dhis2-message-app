@@ -95,6 +95,12 @@ class ApiService {
         return fetch(uri, options);
     }
 
+    unauthenticatedDelete(uri) {
+        return fetch(uri, {
+            method: "DELETE"
+        });
+    }
+
     // /**
     //  * GET request to api as an unauthenticated user
     //  * @param uri the url to the endpoint
