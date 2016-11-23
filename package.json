@@ -5,17 +5,19 @@
   "scripts": {
     "start": "node webpack-server.js",
     "build": "webpack -p",
-    "test": "karma start"
+    "test": "karma start --auto-watch"
   },
   "dependencies": {
     "aliasify": "^2.1.0",
     "babel": "^6.5.2",
+    "bower-webpack-plugin": "^0.1.9",
     "browserify": "^13.1.1",
     "dropbox": "^2.4.0",
     "filesaverjs": "^0.2.2",
     "karma-babel-preprocessor": "^6.0.1",
     "karma-browserify": "^5.1.0",
     "karma-webpack": "^1.8.0",
+    "minimist": "^1.2.0",
     "nock": "^9.0.2",
     "object-assign": "^4.1.0",
     "react": "^15.3.2",
