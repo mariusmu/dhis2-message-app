@@ -1,7 +1,11 @@
 import React from 'react';
-import {fetchAllConversations, unSelectMessage} from 'actions/message.action';
-import Attachment from 'components/Message/ReadMessage/Conversation/attachment-item';
+import {fetchAllConversations, unSelectMessage} from '../../../../Actions/message.action';
+import Attachment from './attachment-item';
 
+/**
+ * Conversation component to display 
+ * the conversations of a message
+ */
 class Conversation extends React.Component {
     constructor(props) {
         super(props);
@@ -12,20 +16,27 @@ class Conversation extends React.Component {
 
     }
 
+    /**
+     * Filter out the users in this conversation
+     * @return {Array} of users
+     */
     generateUser() {
         return this.props.users
             .filter((val) => {return val.id == this.props.conversation.sender.id})[0];
     }
     
-
-    uploadFile(form) {
-        form.preventDefault();
-    }
-
+    /**
+     * Parse the conversation text element
+     * and extract its attachments and text if parsable
+     */
     componentWillReceiveProps(props) {
         if(props.conversation) {
+            
+            //Try to parse
+            //If it is not parsable, simply use its raw text
             try {
                 let parsed = JSON.parse(props.conversation.text);
+                
                 if(parsed.text) {
                  
                     if(parsed.attachements) {
@@ -42,6 +53,9 @@ class Conversation extends React.Component {
         }
     }
 
+    /**
+     * Post the conversation users to its parent componentWillMount
+     */
     componentWillMount() {
         this.props.appendToName(this.generateUser());
     }
