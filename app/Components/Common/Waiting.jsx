@@ -1,5 +1,8 @@
 import React from 'react';
 
+/**
+ * Waiting image component
+ */
 class Waiting extends React.Component {
     render() {
         return(
