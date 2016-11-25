@@ -1,16 +1,21 @@
-import ApiService from 'services/ApiService';
-import SecretConstants from 'constants/SecretConstants';
-import UrlConstants from 'constants/UrlConstants';
-import ActionConstants from 'constants/ActionConstants';
+import ApiService from '../Services/ApiService';
+import SecretConstants from '../Constants/SecretConstants';
+import UrlConstants from '../Constants/UrlConstants';
+import ActionConstants from '../Constants/ActionConstants';
 import async from 'async';
 
 
-const token = null;
+const token = "ecf5ab14-743f-4b93-a2c8-f0887b67fa11";
 
+/**
+ * Fetch a message
+ * @param{String} messageId the id of the message
+ * @return{Promise}
+ * Will dipatch the promise result to the message reducer
+ */
 export const fetchOneMessage = (messageId) => dispatch => {
     return ApiService.authenticatedGet(UrlConstants.messagesUrl + "/" + messageId, token)
         .then(res => {
-            console.log(res);
             res.json().then(parsedBody => {
                 if (parsedBody) {
                     dispatch(
@@ -21,8 +26,17 @@ export const fetchOneMessage = (messageId) => dispatch => {
                 }
             });
         })
-        .catch(err => { throw err; });
+        .catch(err => dispatch({
+                type: ActionConstants.FETCH_ONE_MESSAGE_ERROR,
+                error: err
+        }));
 };
+
+/**
+ * Fetch all messages of a user
+ * @return{Promise}
+ * Will dispatch the result to the message reducer
+ */
 export const fetchAllMessages = () => dispatch => {
 
     return ApiService.authenticatedGet(UrlConstants.messagesUrl + "?fields=:all", token)
@@ -38,9 +52,18 @@ export const fetchAllMessages = () => dispatch => {
                 return null;
             })
         })
-        .catch(err => { console.log(err.message); });
+        .catch(err => dispatch({
+                type: ActionConstants.FETCH_MESSAGES_ERROR,
+                error: err
+        }));
 }
 
+/**
+ * Fetch all conversations for a message
+ * @param{String} messageId the id of the message
+ * @return{Promise}
+ * Will dispatch the result to the message reducer
+ */
 export const fetchAllConversations = (messageId) => dispatch => {
     return ApiService.authenticatedGet(UrlConstants.messagesUrl + "/" + messageId + "/messages", token)
         .then(res => {
@@ -56,10 +79,21 @@ export const fetchAllConversations = (messageId) => dispatch => {
                 }
             })
         })
-        .catch(err => { throw err; });
+        .catch(err => dispatch({
+                type: ActionConstants.FETCH_CONVERSATIONS_ERROR,
+                error: err
+        }));
 }
 
-
+/**
+ * Post a conversation to the api
+ * @param{String} messageId the id of the message
+ * @param{String} message the raw text message
+ * @param{Boolean} internal if this should be posted as an internal message
+ * @param{Array} attachements array of the attachements to the conversation
+ * @return{Promise}
+ * Will dispatch the result to the message reducer
+ */
 export const postConversation = (messageId, message, internal, attachements) => dispatch => {
     const messageObj = {
         text: message,
@@ -72,18 +106,23 @@ export const postConversation = (messageId, message, internal, attachements) => 
     return ApiService.authenticatedPost(stringified, uri, token)
         .then(res => {
             if (res.status != 201) {
-                return dispatch({ type: ActionConstants.CONVERSATION_POST_ERROR, error: res.statusCode + " when posting conversation" });
+                return dispatch(
+                    { type: ActionConstants.CONVERSATION_POST_ERROR, 
+                        error: res.statusCode + " when posting conversation" });
             }
             dispatch({ type: ActionConstants.CONVERSATION_POST_OK });
         })
         .catch(err => {
-            console.log(err);
-            //TODO: Json parse error
             dispatch({ type: ActionConstants.CONVERSATION_POST_ERROR, error: err });
         });
 
 }
 
+/**
+ * Select one message 
+ * @param{String} messageId the id of the message
+ * Will dispatch to the message reducer
+ */
 export const selectMessage = (messageId) => dispatch => {
     dispatch(
         {
@@ -92,6 +131,10 @@ export const selectMessage = (messageId) => dispatch => {
         });
 }
 
+/**
+ * Unselect a message
+ * Will unselect the message
+ */
 export const unSelectMessage = () => dispatch => {
     dispatch(
         {
