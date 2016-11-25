@@ -25,7 +25,7 @@ class ShareButton extends React.Component {
         var source = 'http://localhost:8082/api/'+this.props.type+'/'+this.props.id+'/data';
 
         return (
-            <div>
+            <div className="containerButton">
                 <a id="btnShare" onClick={this._toggle.bind(this)}>
                     <i className="fa fa-share-alt"/>
                 </a>
