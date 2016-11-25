@@ -1,12 +1,17 @@
-import ApiService from 'services/ApiService';
-import UrlConstants from 'constants/UrlConstants';
-import ActionConstants from 'constants/ActionConstants';
+import ApiService from '../Services/ApiService';
+import UrlConstants from '../Constants/UrlConstants';
+import ActionConstants from '../Constants/ActionConstants';
 
-const token = null;
+const token = "ecf5ab14-743f-4b93-a2c8-f0887b67fa11";
+
+/**
+ * Fetch all user that the local user can see
+ * @return{Promise}
+ * Will dispatch the result tot the user reducer
+ */
 export const fetchAllUsers = () => dispatch => {
     return ApiService.authenticatedGet(UrlConstants.userQuery, token)
         .then(res => {
-            console.log(res);
             res.json().then(parsedBody => {
                 dispatch(
                     {
@@ -16,5 +21,10 @@ export const fetchAllUsers = () => dispatch => {
                     }
                 )})
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            dispatch({
+                type: ActionConstants.FETCH_CONVERSATIONS_ERROR,
+                error: err
+            });
+        });
 };
