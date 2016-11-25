@@ -11,7 +11,7 @@ import $ from 'jquery';
 class ShareButton extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { showModal: false, show: false, comment: 'Your comment', social:'fb',disabled:"disabled",nodisplay:""};
+        this.state = { showModal: false, show: false, comment: '', social:'fb',disabled:"disabled",nodisplay:"",maxlength:0,text:""};
     }
 
 
@@ -56,10 +56,10 @@ class ShareButton extends React.Component {
 
                         </Row>
 
-                        <div id="modalQuestion">Add your comment:</div>
+                        <div id="modalQuestion">{this.state.text}</div>
                         <Row bsClass="text-center">
                             <form>
-                                <textarea className="form-control" rows="3" value={this.state.comment} onChange={this._handle_comment_change.bind(this)}/>
+                                <textarea className="form-control" placeholder="Enter your comment here... " rows="3"  maxLength={this.state.maxlength} value={this.state.comment} onChange={this._handle_comment_change.bind(this)}/>
                             </form>
                         </Row>
 
@@ -94,10 +94,19 @@ class ShareButton extends React.Component {
     }
     _open(social){
         //close tooltip
+        if(social == 'fb'){
+            this.setState({ maxlength:1000 , text:"Enter Your comment" });
+        }
+        if(social == 'tw'){
+            console.log("")
+            this.setState({ maxlength:140 , text:"Enter Your comment (Max 140 caracters)" });
+        }
         this.setState({show:false});
+        this.setState({ showModal: true, social:social });
+
 
         console.log(social);
-        this.setState({ showModal: true, social:social });
+
     }
     _toggle() {
         this.setState({ show: !this.state.show });

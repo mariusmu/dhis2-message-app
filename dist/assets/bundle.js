@@ -26425,11 +26425,11 @@
 
 	var _Body2 = _interopRequireDefault(_Body);
 
-	var _Menu = __webpack_require__(491);
+	var _Menu = __webpack_require__(492);
 
 	var _Menu2 = _interopRequireDefault(_Menu);
 
-	var _Footer = __webpack_require__(492);
+	var _Footer = __webpack_require__(493);
 
 	var _Footer2 = _interopRequireDefault(_Footer);
 
@@ -26506,7 +26506,7 @@
 
 	var _Parent2 = _interopRequireDefault(_Parent);
 
-	var _About = __webpack_require__(490);
+	var _About = __webpack_require__(491);
 
 	var _About2 = _interopRequireDefault(_About);
 
@@ -26598,6 +26598,10 @@
 
 	var _Widget2 = _interopRequireDefault(_Widget);
 
+	var _PivotRow = __webpack_require__(490);
+
+	var _PivotRow2 = _interopRequireDefault(_PivotRow);
+
 	var _reactBootstrap = __webpack_require__(237);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -26628,31 +26632,61 @@
 	            var self = this;
 	            console.log("coucou c'est moi");
 	            console.log(self.state.type);
-	            return _react2.default.createElement(
-	                'div',
-	                { id: 'mainContent' },
-	                _react2.default.createElement(
-	                    _reactBootstrap.Row,
-	                    null,
+
+	            if (self.state.type === "reportTables") {
+	                return _react2.default.createElement(
+	                    'div',
+	                    { id: 'mainContent' },
+	                    _react2.default.createElement(
+	                        _reactBootstrap.Row,
+	                        null,
+	                        _react2.default.createElement(
+	                            'div',
+	                            { id: 'typeTitle', className: 'col-lg-12' },
+	                            _react2.default.createElement(
+	                                'h1',
+	                                null,
+	                                'Favorite ',
+	                                self.state.type
+	                            )
+	                        )
+	                    ),
 	                    _react2.default.createElement(
 	                        'div',
-	                        { id: 'typeTitle', className: 'col-lg-12' },
-	                        _react2.default.createElement(
-	                            'h1',
-	                            null,
-	                            'Favorite ',
-	                            self.state.type
-	                        )
+	                        null,
+	                        this.state.data.map(function (val) {
+	                            return _react2.default.createElement(_PivotRow2.default, { id: val.id, name: val.name, key: Math.random() });
+	                        })
 	                    )
-	                ),
-	                _react2.default.createElement(
+	                );
+	            } else {
+	                return _react2.default.createElement(
 	                    'div',
-	                    null,
-	                    this.state.data.map(function (val) {
-	                        return _react2.default.createElement(_Widget2.default, { username: 'admin', password: 'district', id: val.id, name: val.name, type: self.state.type, key: Math.random() });
-	                    })
-	                )
-	            );
+	                    { id: 'mainContent' },
+	                    _react2.default.createElement(
+	                        _reactBootstrap.Row,
+	                        null,
+	                        _react2.default.createElement(
+	                            'div',
+	                            { id: 'typeTitle', className: 'col-lg-12' },
+	                            _react2.default.createElement(
+	                                'h1',
+	                                null,
+	                                'Favorite ',
+	                                self.state.type
+	                            )
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        null,
+	                        this.state.data.map(function (val) {
+	                            return _react2.default.createElement(_Widget2.default, { username: 'admin', password: 'district', id: val.id, name: val.name,
+	                                type: self.state.type, key: Math.random() });
+	                        })
+	                    )
+	                );
+	            }
 	        }
 	    }, {
 	        key: 'componentWillMount',
@@ -26710,7 +26744,7 @@
 	                            outputData.push({ id: id, name: name });
 	                        }
 	                    } else if (type === 'reportTables') {
-	                        for (var i = 0; i < 10; i++) {
+	                        for (var i = 0; i < data.reportTables.length; i++) {
 	                            var id = data.reportTables[i].id;
 	                            var name = data.reportTables[i].displayName;
 	                            outputData.push({ id: id, name: name });
@@ -45720,7 +45754,7 @@
 
 	        var _this = _possibleConstructorReturn(this, (ShareButton.__proto__ || Object.getPrototypeOf(ShareButton)).call(this, props));
 
-	        _this.state = { showModal: false, show: false, comment: 'Your comment', social: 'fb', disabled: "disabled", nodisplay: "" };
+	        _this.state = { showModal: false, show: false, comment: '', social: 'fb', disabled: "disabled", nodisplay: "", maxlength: 0, text: "" };
 	        return _this;
 	    }
 
@@ -45733,11 +45767,15 @@
 	                container: this
 	            };
 
-	            var source = 'http://localhost:8082/api/' + this.props.type + '/' + this.props.id + '/data';
+	            if (this.props.type == "reportTables") {
+	                var source = this.props.source;
+	            } else {
+	                var source = 'http://localhost:8082/api/' + this.props.type + '/' + this.props.id + '/data';
+	            }
 
 	            return _react2.default.createElement(
 	                'div',
-	                null,
+	                { className: 'containerButton' },
 	                _react2.default.createElement(
 	                    'a',
 	                    { id: 'btnShare', onClick: this._toggle.bind(this) },
@@ -45781,7 +45819,7 @@
 	                        _react2.default.createElement(
 	                            'div',
 	                            { id: 'modalQuestion' },
-	                            'Add your comment:'
+	                            this.state.text
 	                        ),
 	                        _react2.default.createElement(
 	                            _reactBootstrap.Row,
@@ -45789,7 +45827,7 @@
 	                            _react2.default.createElement(
 	                                'form',
 	                                null,
-	                                _react2.default.createElement('textarea', { className: 'form-control', rows: '3', value: this.state.comment, onChange: this._handle_comment_change.bind(this) })
+	                                _react2.default.createElement('textarea', { className: 'form-control', placeholder: 'Enter your comment here... ', rows: '3', maxLength: this.state.maxlength, value: this.state.comment, onChange: this._handle_comment_change.bind(this) })
 	                            )
 	                        )
 	                    ),
@@ -45816,9 +45854,8 @@
 
 	            console.log(prevState.showModal);
 
-	            if (prevState.showModal == false && this.state.showModal == true) {
+	            if (prevState.showModal == false && this.state.showModal == true && this.state.type != "reportTables") {
 	                var $image = (0, _jquery2.default)('#sharedImgModal');
-	                console.log("coucou");
 
 	                if ($image[0].complete) {
 	                    this._hideLoading();
@@ -45834,10 +45871,17 @@
 	        key: '_open',
 	        value: function _open(social) {
 	            //close tooltip
+	            if (social == 'fb') {
+	                this.setState({ maxlength: 1000, text: "Enter Your comment" });
+	            }
+	            if (social == 'tw') {
+	                console.log("");
+	                this.setState({ maxlength: 140, text: "Enter Your comment (Max 140 caracters)" });
+	            }
 	            this.setState({ show: false });
+	            this.setState({ showModal: true, social: social });
 
 	            console.log(social);
-	            this.setState({ showModal: true, social: social });
 	        }
 	    }, {
 	        key: '_toggle',
@@ -45876,7 +45920,13 @@
 
 	            var self = this;
 
-	            var image = self._getBase64Image(document.getElementById("sharedImgModal"));
+	            if (this.props.type == "reportTables") {
+	                var image = this.props.source;
+	                image = image.replace(/^data:image\/(png|jpg);base64,/, "");
+	            } else {
+	                var image = self._getBase64Image(document.getElementById("sharedImgModal"));
+	            }
+
 	            console.log(image);
 
 	            // Initialize with your OAuth.io app public key
@@ -45909,59 +45959,59 @@
 	        key: '_uploadFacebook',
 	        value: function _uploadFacebook() {
 	            var contentType = 'image/png';
-	            var img = new Image();
-	            img.src = "http://localhost:8082/api/" + this.props.type + "/" + this.props.id + "/data";
 
 	            var self = this;
 
-	            console.log(img);
-	            (0, _jquery2.default)("#modal1").show();
+	            if (this.props.type == "reportTables") {
+	                var image = this.props.source;
+	                image = image.replace(/^data:image\/(png|jpg);base64,/, "");
+	            } else {
 
-	            img.addEventListener('load', function () {
-	                var image = self._getBase64Image(img);
-	                console.log("couocuocuocuc");
-	                console.log(image);
-	                var blob = self._b64toBlob(image, contentType);
-	                //var blobUrl = URL.createObjectURL(blob);
+	                var image = self._getBase64Image(document.getElementById("sharedImgModal"));
+	            }
 
-	                FB.login(function () {
+	            console.log("couocuocuocuc");
+	            console.log(image);
+	            var blob = self._b64toBlob(image, contentType);
+	            //var blobUrl = URL.createObjectURL(blob);
 
-	                    var access_token = FB.getAuthResponse()['accessToken'];
-	                    console.log('Access Token = ' + access_token);
+	            FB.login(function () {
 
-	                    var fd = new FormData();
-	                    fd.append("access_token", access_token);
-	                    fd.append("source", blob);
-	                    fd.append("message", self.state.comment);
-	                    try {
-	                        _jquery2.default.ajax({
-	                            url: "https://graph.facebook.com/me/photos?access_token=" + access_token,
-	                            type: "POST",
-	                            data: fd,
-	                            processData: false,
-	                            contentType: false,
-	                            cache: false,
+	                var access_token = FB.getAuthResponse()['accessToken'];
+	                console.log('Access Token = ' + access_token);
 
-	                            success: function success(data) {
-	                                console.log("success " + data.id);
-	                                var url = "https://www.facebook.com/photo.php?fbid=" + data.id;
-	                                (0, _jquery2.default)(".fb-send").attr("data-href", url);
-	                            },
-	                            error: function error(shr, status, data) {
-	                                console.log("error " + data + " Status " + shr.status);
-	                            },
-	                            complete: function complete() {
-	                                console.log("Posted to facebook");
-	                                (0, _jquery2.default)("#modal1").hide();
-	                                (0, _jquery2.default)("#fade").hide();
-	                                self._close();
-	                            }
-	                        });
-	                    } catch (e) {
-	                        console.log(e);
-	                    }
-	                }, { scope: 'publish_actions,user_photos' });
-	            });
+	                var fd = new FormData();
+	                fd.append("access_token", access_token);
+	                fd.append("source", blob);
+	                fd.append("message", self.state.comment);
+	                try {
+	                    _jquery2.default.ajax({
+	                        url: "https://graph.facebook.com/me/photos?access_token=" + access_token,
+	                        type: "POST",
+	                        data: fd,
+	                        processData: false,
+	                        contentType: false,
+	                        cache: false,
+
+	                        success: function success(data) {
+	                            console.log("success " + data.id);
+	                            var url = "https://www.facebook.com/photo.php?fbid=" + data.id;
+	                            (0, _jquery2.default)(".fb-send").attr("data-href", url);
+	                        },
+	                        error: function error(shr, status, data) {
+	                            console.log("error " + data + " Status " + shr.status);
+	                        },
+	                        complete: function complete() {
+	                            console.log("Posted to facebook");
+	                            (0, _jquery2.default)("#modal1").hide();
+	                            (0, _jquery2.default)("#fade").hide();
+	                            self._close();
+	                        }
+	                    });
+	                } catch (e) {
+	                    console.log(e);
+	                }
+	            }, { scope: 'publish_actions,user_photos' });
 	        }
 	    }, {
 	        key: '_b64toBlob',
@@ -56996,6 +57046,157 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _Image = __webpack_require__(405);
+
+	var _Image2 = _interopRequireDefault(_Image);
+
+	var _ShareButton = __webpack_require__(487);
+
+	var _ShareButton2 = _interopRequireDefault(_ShareButton);
+
+	var _domToImage = __webpack_require__(489);
+
+	var _domToImage2 = _interopRequireDefault(_domToImage);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by ophelie on 18/11/2016.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+	var PivotRow = function (_React$Component) {
+	    _inherits(PivotRow, _React$Component);
+
+	    function PivotRow(props) {
+	        _classCallCheck(this, PivotRow);
+
+	        var _this = _possibleConstructorReturn(this, (PivotRow.__proto__ || Object.getPrototypeOf(PivotRow)).call(this, props));
+
+	        _this.state = { source: '', hidden: 'list-group-item pivotHidden', hiddenShare: 'pivotHidden', arrowPivot: 'fa fa-arrow-left fa-lg' };
+	        return _this;
+	    }
+
+	    _createClass(PivotRow, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'button',
+	                    { type: 'button', id: this.props.id, className: 'list-group-item', onClick: this._getHtmlTable.bind(this) },
+	                    this.props.name,
+	                    ' ',
+	                    _react2.default.createElement('i', { className: this.state.arrowPivot })
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: this.state.hidden },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: this.state.hiddenShare },
+	                        _react2.default.createElement(_ShareButton2.default, { id: this.props.id, source: this.state.source, type: 'reportTables' })
+	                    ),
+	                    _react2.default.createElement(_Image2.default, { className: 'imagePivot', src: this.state.source })
+	                )
+	            );
+	        }
+	    }, {
+	        key: '_convert',
+	        value: function _convert(node) {
+	            //var node = document.getElementById('my-table');
+	            var div = document.createElement('div');
+	            div.innerHTML = node;
+	            div.setAttribute("class", 'hiddendiv');
+	            div.setAttribute("id", this.props.id + 'm');
+	            console.log(div.firstChild);
+
+	            document.getElementById('my-table').appendChild(div);
+
+	            var d = document.getElementById(this.props.id + 'm');
+
+	            //this.setState({divhide:div.firstChild});
+
+	            //var content = document.getElementById(this.props.id + 'm');
+
+	            var self = this;
+
+	            _domToImage2.default.toPng(d).then(function (dataUrl) {
+	                var img = new Image();
+	                img.src = dataUrl;
+	                console.log(dataUrl);
+	                console.log(d);
+	                //document.body.appendChild(img);
+	                self.setState({ source: dataUrl, hiddenShare: '' });
+
+	                $('#' + self.props.id + 'm').remove();
+	            }).catch(function (error) {
+	                console.error('oops, something went wrong!', error);
+	            });
+	        }
+	    }, {
+	        key: '_getHtmlTable',
+	        value: function _getHtmlTable() {
+	            if (this.state.hidden === 'list-group-item pivotHidden') {
+	                this.setState({ hidden: 'list-group-item', arrowPivot: 'fa fa-arrow-down fa-lg' });
+
+	                console.log("ok");
+	                var username = 'admin',
+	                    password = 'district';
+	                var url = 'http://localhost:8082/api/reportTables/' + this.props.id + '/data.html';
+	                console.log(url);
+	                var self = this;
+	                $.ajax({
+	                    url: url,
+	                    type: 'GET',
+	                    dataType: 'text',
+	                    headers: {
+	                        "Authorization": "Basic " + btoa(username + ":" + password)
+	                    },
+	                    success: function success(data) {
+	                        console.log("coucou");
+	                        //console.log(data);
+	                        self._convert(data);
+	                    }
+	                });
+	            } else {
+	                this.setState({ hidden: 'list-group-item pivotHidden', arrowPivot: 'fa fa-arrow-left fa-lg' });
+	            }
+	        }
+	    }]);
+
+	    return PivotRow;
+	}(_react2.default.Component);
+
+	module.exports = PivotRow;
+	;
+
+	var _temp = function () {
+	    if (typeof __REACT_HOT_LOADER__ === 'undefined') {
+	        return;
+	    }
+
+	    __REACT_HOT_LOADER__.register(PivotRow, 'PivotRow', 'C:/Users/Julien/Desktop/Open Source/Project/dhis2-live (2)/dhis-live/webapps/dhis/dhis2-message-app/app/Components/PivotRow.jsx');
+	}();
+
+	;
+
+/***/ },
+/* 491 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
 	var _reactBootstrap = __webpack_require__(237);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -57098,7 +57299,7 @@
 	;
 
 /***/ },
-/* 491 */
+/* 492 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57215,7 +57416,7 @@
 	;
 
 /***/ },
-/* 492 */
+/* 493 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
