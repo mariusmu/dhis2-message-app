@@ -22,7 +22,7 @@ class PivotRow extends React.Component {
                 </button>
                 <div className={this.state.hidden}>
                     <div className={this.state.hiddenShare}>
-                        <ShareButton id={this.props.id} type="reportTables"/>
+                        <ShareButton id={this.props.id} source={this.state.source} type="reportTables"/>
                     </div>
                     <Image_boot className='imagePivot' src={this.state.source}/>
                 </div>

@@ -22,7 +22,13 @@ class ShareButton extends React.Component {
             container: this,
         };
 
-        var source = 'http://localhost:8082/api/'+this.props.type+'/'+this.props.id+'/data';
+        if (this.props.type == "reportTables")
+        {
+            var source = this.props.source;
+
+        }else {
+            var source = 'http://localhost:8082/api/' + this.props.type + '/' + this.props.id + '/data';
+        }
 
         return (
             <div className="containerButton">
@@ -73,9 +79,9 @@ class ShareButton extends React.Component {
 
         console.log(prevState.showModal);
 
-        if( prevState.showModal == false && this.state.showModal ==true) {
+        if( prevState.showModal == false && this.state.showModal ==true && this.state.type != "reportTables") {
             var $image = $('#sharedImgModal');
-console.log("coucou");
+
 
             if ($image[0].complete) {
                 this._hideLoading();
@@ -122,7 +128,16 @@ console.log("coucou");
 
         var self = this;
 
-        var image = self._getBase64Image(document.getElementById("sharedImgModal"));
+        if (this.props.type == "reportTables")
+        {
+            var image= this.props.source;
+            image = image.replace(/^data:image\/(png|jpg);base64,/, "");
+
+        }else {
+            var image = self._getBase64Image(document.getElementById("sharedImgModal"));
+        }
+
+
         console.log(image);
 
         // Initialize with your OAuth.io app public key
