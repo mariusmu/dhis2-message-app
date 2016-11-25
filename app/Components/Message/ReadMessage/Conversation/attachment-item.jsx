@@ -1,8 +1,12 @@
 import React from 'react';
-import { readFile } from 'actions/file.action';
+import { readFile } from '../../../../Actions/file.action';
 import FileSaver from 'filesaverjs';
-import ImageAttachment from 'components/Message/ReadMessage/Conversation/image-attachment';
+import ImageAttachment from './image-attachment';
 
+/**
+ * Attachment item component that decides if to print 
+ * the attachment as a link or as an image preview
+ */
 class AttachmentItem extends React.Component {
 
     constructor(props) {
@@ -10,10 +14,12 @@ class AttachmentItem extends React.Component {
         this.readFile = this.readFile.bind(this);
 
     }
-    componentWillReceiveProps(props) {
-        
-    }
 
+    /**
+     * Check if the attachment is an image
+     * @param{String} attachment the filename
+     * @return{Boolean} true if this is a picture. Else false
+     */
     isImage(attachment) {
         let suffix = this.findSuffix(attachment);
         return suffix === ".png" || 
@@ -27,6 +33,11 @@ class AttachmentItem extends React.Component {
     }
 
 
+    /**
+     * Find the suffix in a filename
+     * @param{String} attachment the filename
+     * @return{String} the suffix or null of not valid
+     */
     findSuffix(attachment) {
         
         if(!attachment.name) return null;
@@ -38,6 +49,9 @@ class AttachmentItem extends React.Component {
         return name.substring(lastDot, length);
     }
 
+    /**
+     * Download the file
+     */
     readFile() {
         if (this.props.attachment.rev) {
             readFile(this.props.attachment.path_display)
@@ -49,7 +63,6 @@ class AttachmentItem extends React.Component {
         }
     }
     render() {
-        console.log(this.props.attachment);
         return (
         <div className="attachment">
             {this.isImage(this.props.attachment) ? 
