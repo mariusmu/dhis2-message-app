@@ -77,6 +77,13 @@ class Parent extends React.Component {
                         outputData.push({id: id, name: name});
                     }
                 }
+                else if (type==='reportTables'){
+                    for (var i = 0; i < 10; i++) {
+                        var id = data.reportTables[i].id;
+                        var name = data.reportTables[i].displayName;
+                        outputData.push({id: id, name: name});
+                    }
+                }
 
                 self.setState({data:outputData});
                 console.log(outputData);

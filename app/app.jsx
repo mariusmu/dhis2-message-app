@@ -4,6 +4,7 @@ import {Router, Link, Route, browserHistory} from 'react-router';
 
 import Page from './Components/Page';
 
+
 /**
  * Route different urls to different Components
  * <Router history={browserHistory}>
@@ -13,12 +14,19 @@ import Page from './Components/Page';
  <Route path="charts" component={Next}/>
  <Route path="maps" component={Next}/>
  </Router>
+
+
+ PDF
+ <Pdf src={'http://localhost:8082/api/reportTables/SEMVWsnVblY/data.pdf'}>
+ <Viewer />
+ </Pdf>
  */
 
 
 ReactDom.render((
     <Page/>
 ), document.getElementById("app"));
+
 
 /**
  * Not sure if this is needed. Has been before
