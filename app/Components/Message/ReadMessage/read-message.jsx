@@ -1,9 +1,9 @@
 import React from 'react';
-import { postConversation, fetchAllConversations, unSelectMessage } from 'actions/message.action';
-import Conversation from 'components/Message/ReadMessage/Conversation/conversation';
-import NameLink from 'components/Message/ReadMessage/name-link';
-import WriteResponse from 'components/Message/ReadMessage/Conversation/write-response';
-import { fetchAllUsers } from 'actions/user.action';
+import { postConversation, fetchAllConversations, unSelectMessage } from '../../../Actions/message.action';
+import Conversation from './Conversation/conversation';
+import NameLink from './name-link';
+import WriteResponse from './Conversation/write-response';
+import { fetchAllUsers } from '../../../Actions/user.action';
 
 
 class ReadMessage extends React.Component {
