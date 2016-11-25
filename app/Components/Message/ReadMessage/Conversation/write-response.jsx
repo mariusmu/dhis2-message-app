@@ -1,10 +1,13 @@
 import React from 'react';
-import MultiPart from 'components/Message/Attachment/MultiPart';
-class WriteResponse extends React.Component {
+import MultiPart from '../../Attachment/multi-part';
+
+/**
+ * Write response component to use in the message display
+ */
+class WriteResponseForm extends React.Component {
 
     constructor(props) {
         super(props);
-        this.submitForm = this.submitForm.bind(this);
         this.reply = this.reply.bind(this);
         this.internalReply = this.internalReply.bind(this);
         this.onReplyValueChange = this.onReplyValueChange.bind(this);
@@ -15,14 +18,17 @@ class WriteResponse extends React.Component {
         this.updateAttachment = this.updateAttachment.bind(this);
     }
 
-    submitForm(e) {
-        e.preventDefault();
-    }
-
+    /**
+     * When text reply changes it value, then assign it to the state
+     * @param{ChangeEvent} e event
+     */
     onReplyValueChange(e) {
         this.setState({reply : e.target.value});        
     }
 
+    /**
+     * Send this conversation as an internal reply
+     */
     internalReply() {
         
         const message = this.state.reply;
@@ -32,24 +38,32 @@ class WriteResponse extends React.Component {
 
         if(this.props.shouldRefresh) {
             this.setState({attachements: [], reply : ""});
-            console.log("Refreshed");
         }
     }
 
+    /**
+     * Update the attachment of this conversation
+     */
     updateAttachment(attachement) {
         this.setState({attachements : attachement, waiting: false});
     }
 
+    /**
+     * Send a response as a normal reply conversation
+     */
     reply() {
-        console.log(this);
         const message = this.state.reply;
         const attachements = this.state.attachements;
+
+        //Dont post if there is no text
         if(!message || message == "") return;
+        
+        //Call the parent replyAction
         this.props.replyAction(message, false, attachements);
         
+        //Important: In some cases we don't want to reset the components
         if(this.props.shouldRefresh)  {
             this.setState({attachements: [], reply : ""});
-            console.log("Refreshed");
         }
     }
 
@@ -77,4 +91,4 @@ class WriteResponse extends React.Component {
     }
 }
 
-module.exports = WriteResponse;
+module.exports = WriteResponseForm;
