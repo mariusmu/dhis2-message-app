@@ -4,6 +4,7 @@
 
 import React from 'react';
 import Widget from './Widget';
+import PivotRow from './PivotRow';
 import { Row } from 'react-bootstrap';
 
 
@@ -12,22 +13,44 @@ class Parent extends React.Component {
         super(props);
         this.state = {data:[],type:this.props.type};
     }
-    render(){
+    render() {
         var self = this;
         console.log("coucou c'est moi");
         console.log(self.state.type);
-        return(
-            <div id="mainContent">
-                <Row>
-                    <div id="typeTitle" className="col-lg-12">
-                        <h1>Favorite {self.state.type}</h1>
+
+        if (self.state.type === "reportTables") {
+            return(
+                <div id="mainContent">
+                    <Row>
+                        <div id="typeTitle" className="col-lg-12">
+                            <h1>Favorite {self.state.type}</h1>
+                        </div>
+                    </Row>
+                    <div>
+                        {this.state.data.map(function (val) {
+                            return <PivotRow id={val.id} name={val.name} key={Math.random()} /> ;
+                        })}
                     </div>
-                </Row>
-               <div>
-                   {this.state.data.map(function(val){ return <Widget username="admin" password="district" id={val.id} name={val.name} type={self.state.type} key={Math.random()}/>;})}
-               </div>
-            </div>
-        );
+                </div>
+            );
+        }
+        else {
+            return (
+                <div id="mainContent">
+                    <Row>
+                        <div id="typeTitle" className="col-lg-12">
+                            <h1>Favorite {self.state.type}</h1>
+                        </div>
+                    </Row>
+                    <div>
+                        {this.state.data.map(function (val) {
+                            return <Widget username="admin" password="district" id={val.id} name={val.name}
+                                           type={self.state.type} key={Math.random()}/>;
+                        })}
+                    </div>
+                </div>
+            );
+        }
     }
     componentWillMount(){
         this.setState({type:this.props.type});
@@ -78,7 +101,7 @@ class Parent extends React.Component {
                     }
                 }
                 else if (type==='reportTables'){
-                    for (var i = 0; i < 10; i++) {
+                    for (var i = 0; i < data.reportTables.length; i++) {
                         var id = data.reportTables[i].id;
                         var name = data.reportTables[i].displayName;
                         outputData.push({id: id, name: name});

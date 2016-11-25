@@ -8,6 +8,31 @@
     z-index: 20 !important;
 }
 
+.imagePivot{
+    width: 60%;
+}
+
+.pivotHidden{
+    display: none;
+}
+
+.fa.fa-arrow-left.fa-lg{
+    float: right;
+}
+
+.fa.fa-arrow-down.fa-lg{
+    float: right;
+}
+
+.list-group-item.pivotHidden{
+    display: none;
+}
+
+.containerButton{
+    display: inline-block;
+    float: right;
+}
+
 #modalQuestion {
     margin-bottom: 10px;
     margin-top: 20px;
