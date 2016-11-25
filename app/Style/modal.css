@@ -13,6 +13,14 @@
     margin-top: 20px;
 }
 
+.nodisplay{
+    display:none;
+}
+
+#publish.disabled {
+    cursor : not-allowed;
+}
+
 .hiddendiv{
     z-index: 0;
     position: fixed;
