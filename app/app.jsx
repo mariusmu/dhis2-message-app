@@ -6,8 +6,8 @@ import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 
 import {rootReducer} from './Reducers/root.reducer'
-import Message from 'components/Message/Message'
-import WriteMessage from 'components/Message/WriteMessage/WriteMessage';
+import Message from './Components/Message/Message'
+import WriteMessage from './Components/Message/WriteMessage/write-message';
 
 function mapStateToProps (state,props) {
     return {
