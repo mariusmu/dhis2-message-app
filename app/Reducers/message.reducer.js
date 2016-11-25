@@ -1,4 +1,4 @@
-import ActionConstants from 'constants/ActionConstants';
+import ActionConstants from '../Constants/ActionConstants';
 import InitialState from './InitialState';
 
 module.exports = function (state = InitialState.messages, action) {
