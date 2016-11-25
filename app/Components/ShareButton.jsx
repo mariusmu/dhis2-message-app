@@ -171,16 +171,22 @@ class ShareButton extends React.Component {
     }
     _uploadFacebook(){
         const contentType = 'image/png';
-        var img = new Image();
-        img.src = "http://localhost:8082/api/" + this.props.type + "/" + this.props.id + "/data";
+
 
         var self = this;
 
-        console.log(img);
-        $("#modal1").show();
+        if (this.props.type == "reportTables")
+        {
+            var image= this.props.source;
+            image = image.replace(/^data:image\/(png|jpg);base64,/, "");
 
-        img.addEventListener('load', function () {
-            var image = self._getBase64Image(img);
+        }else {
+
+            var image = self._getBase64Image(document.getElementById("sharedImgModal"));
+        }
+
+
+
             console.log("couocuocuocuc");
             console.log(image);
             var blob = self._b64toBlob(image, contentType);
@@ -225,7 +231,7 @@ class ShareButton extends React.Component {
                     console.log(e);
                 }
             } ,  {scope: 'publish_actions,user_photos'});
-        });
+
     }
     _b64toBlob(b64Data, contentType, sliceSize) {
         //Convert base64 into blob
