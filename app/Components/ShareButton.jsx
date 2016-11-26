@@ -44,7 +44,7 @@ class ShareButton extends React.Component {
                         <Row>
                             <Images onLoad={this._hideLoading} id="sharedImgModal" src={source} rounded />
                             <div id="loading">
-                                <img id="loader" src="/app/src/loading1.gif"/>
+                                <img id="loader" src="src/loading1.gif"/>
                             </div>
                         </Row>
 

@@ -16,6 +16,10 @@
     display: none;
 }
 
+#searchDivPivot{
+    margin-bottom: 25px;
+}
+
 .fa.fa-arrow-left.fa-lg{
     float: right;
 }
