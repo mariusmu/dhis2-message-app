@@ -30,7 +30,7 @@ class Parent extends React.Component {
                     <Row>
                         <div id="searchDivPivot" className="col-lg-6">
                             <div className="input-group">
-                                <input type="text" className="form-control" onChange={this._sortSearch.bind(this)} placeholder="Search for..."/>
+                                <input type="text" className="form-control" onChange={this._sortSearch.bind(this)} placeholder="Search for..." value={this.state.searchPivot}/>
                                   <span className="input-group-btn">
                                     <button className="btn btn-default" type="button" onClick={this._searchSetDisplay.bind(this)}><i className="fa fa-search fa-lg"/></button>
                                   </span>
@@ -58,7 +58,7 @@ class Parent extends React.Component {
                     <Row>
                         <div id="searchDivPivot" className="col-lg-6">
                             <div className="input-group">
-                                <input type="text" className="form-control" onChange={this._sortSearch.bind(this)} placeholder="Search for..."/>
+                                <input type="text" className="form-control" onChange={this._sortSearch.bind(this)} placeholder="Search for..." value={this.state.searchPivot}/>
                                 <span className="input-group-btn">
                                     <button className="btn btn-default" type="button" onClick={this._searchSetDisplay.bind(this)}><i className="fa fa-search fa-lg"/></button>
                                   </span>
@@ -83,6 +83,10 @@ class Parent extends React.Component {
         this.getGraphsData(this.props.type, 1, []);
     }
     componentWillReceiveProps(nextProps){
+        if(this.state.type !== nextProps.type){
+            this.setState({searchPivot:''});
+            console.log("HAHHAHAHHAHA");
+        }
         this.setState({type:nextProps.type});
         console.log("willUpdate");
         console.log(this.state.type);
