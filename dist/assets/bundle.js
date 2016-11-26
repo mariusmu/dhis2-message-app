@@ -71,6 +71,12 @@
 	 <Route path="charts" component={Next}/>
 	 <Route path="maps" component={Next}/>
 	 </Router>
+
+
+	 PDF
+	 <Pdf src={'http://localhost:8082/api/reportTables/SEMVWsnVblY/data.pdf'}>
+	 <Viewer />
+	 </Pdf>
 	 */
 
 	_reactDom2.default.render(_react2.default.createElement(_Page2.default, null), document.getElementById("app"));
@@ -3240,30 +3246,38 @@
 	// Set.prototype.keys
 	Set.prototype != null && typeof Set.prototype.keys === 'function' && isNative(Set.prototype.keys);
 
+	var setItem;
+	var getItem;
+	var removeItem;
+	var getItemIDs;
+	var addRoot;
+	var removeRoot;
+	var getRootIDs;
+
 	if (canUseCollections) {
 	  var itemMap = new Map();
 	  var rootIDSet = new Set();
 
-	  var setItem = function (id, item) {
+	  setItem = function (id, item) {
 	    itemMap.set(id, item);
 	  };
-	  var getItem = function (id) {
+	  getItem = function (id) {
 	    return itemMap.get(id);
 	  };
-	  var removeItem = function (id) {
+	  removeItem = function (id) {
 	    itemMap['delete'](id);
 	  };
-	  var getItemIDs = function () {
+	  getItemIDs = function () {
 	    return Array.from(itemMap.keys());
 	  };
 
-	  var addRoot = function (id) {
+	  addRoot = function (id) {
 	    rootIDSet.add(id);
 	  };
-	  var removeRoot = function (id) {
+	  removeRoot = function (id) {
 	    rootIDSet['delete'](id);
 	  };
-	  var getRootIDs = function () {
+	  getRootIDs = function () {
 	    return Array.from(rootIDSet.keys());
 	  };
 	} else {
@@ -3279,31 +3293,31 @@
 	    return parseInt(key.substr(1), 10);
 	  };
 
-	  var setItem = function (id, item) {
+	  setItem = function (id, item) {
 	    var key = getKeyFromID(id);
 	    itemByKey[key] = item;
 	  };
-	  var getItem = function (id) {
+	  getItem = function (id) {
 	    var key = getKeyFromID(id);
 	    return itemByKey[key];
 	  };
-	  var removeItem = function (id) {
+	  removeItem = function (id) {
 	    var key = getKeyFromID(id);
 	    delete itemByKey[key];
 	  };
-	  var getItemIDs = function () {
+	  getItemIDs = function () {
 	    return Object.keys(itemByKey).map(getIDFromKey);
 	  };
 
-	  var addRoot = function (id) {
+	  addRoot = function (id) {
 	    var key = getKeyFromID(id);
 	    rootByKey[key] = true;
 	  };
-	  var removeRoot = function (id) {
+	  removeRoot = function (id) {
 	    var key = getKeyFromID(id);
 	    delete rootByKey[key];
 	  };
-	  var getRootIDs = function () {
+	  getRootIDs = function () {
 	    return Object.keys(rootByKey).map(getIDFromKey);
 	  };
 	}
@@ -4084,7 +4098,7 @@
 
 	'use strict';
 
-	module.exports = '15.4.0';
+	module.exports = '15.4.1';
 
 /***/ },
 /* 31 */
@@ -5489,6 +5503,28 @@
 	  return '.' + inst._rootNodeID;
 	};
 
+	function isInteractive(tag) {
+	  return tag === 'button' || tag === 'input' || tag === 'select' || tag === 'textarea';
+	}
+
+	function shouldPreventMouseEvent(name, type, props) {
+	  switch (name) {
+	    case 'onClick':
+	    case 'onClickCapture':
+	    case 'onDoubleClick':
+	    case 'onDoubleClickCapture':
+	    case 'onMouseDown':
+	    case 'onMouseDownCapture':
+	    case 'onMouseMove':
+	    case 'onMouseMoveCapture':
+	    case 'onMouseUp':
+	    case 'onMouseUpCapture':
+	      return !!(props.disabled && isInteractive(type));
+	    default:
+	      return false;
+	  }
+	}
+
 	/**
 	 * This is a unified interface for event plugins to be installed and configured.
 	 *
@@ -5557,7 +5593,12 @@
 	   * @return {?function} The stored callback.
 	   */
 	  getListener: function (inst, registrationName) {
+	    // TODO: shouldPreventMouseEvent is DOM-specific and definitely should not
+	    // live here; needs to be moved to a better place soon
 	    var bankForRegistrationName = listenerBank[registrationName];
+	    if (shouldPreventMouseEvent(registrationName, inst._currentElement.type, inst._currentElement.props)) {
+	      return null;
+	    }
 	    var key = getDictionaryKey(inst);
 	    return bankForRegistrationName && bankForRegistrationName[key];
 	  },
@@ -19647,18 +19688,6 @@
 	  return tag === 'button' || tag === 'input' || tag === 'select' || tag === 'textarea';
 	}
 
-	function shouldPreventMouseEvent(inst) {
-	  if (inst) {
-	    var disabled = inst._currentElement && inst._currentElement.props.disabled;
-
-	    if (disabled) {
-	      return isInteractive(inst._tag);
-	    }
-	  }
-
-	  return false;
-	}
-
 	var SimpleEventPlugin = {
 
 	  eventTypes: eventTypes,
@@ -19729,10 +19758,7 @@
 	      case 'topMouseDown':
 	      case 'topMouseMove':
 	      case 'topMouseUp':
-	        // Disabled elements should not respond to mouse events
-	        if (shouldPreventMouseEvent(targetInst)) {
-	          return null;
-	        }
+	      // TODO: Disabled elements should not respond to mouse events
 	      /* falls through */
 	      case 'topMouseOut':
 	      case 'topMouseOver':
@@ -21094,7 +21120,7 @@
 
 	'use strict';
 
-	module.exports = '15.4.0';
+	module.exports = '15.4.1';
 
 /***/ },
 /* 172 */
@@ -26399,11 +26425,11 @@
 
 	var _Body2 = _interopRequireDefault(_Body);
 
-	var _Menu = __webpack_require__(489);
+	var _Menu = __webpack_require__(492);
 
 	var _Menu2 = _interopRequireDefault(_Menu);
 
-	var _Footer = __webpack_require__(490);
+	var _Footer = __webpack_require__(493);
 
 	var _Footer2 = _interopRequireDefault(_Footer);
 
@@ -26480,6 +26506,10 @@
 
 	var _Parent2 = _interopRequireDefault(_Parent);
 
+	var _About = __webpack_require__(491);
+
+	var _About2 = _interopRequireDefault(_About);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -26505,22 +26535,28 @@
 	    _createClass(Body, [{
 	        key: 'render',
 	        value: function render() {
-	            return _react2.default.createElement(
-	                'div',
-	                { id: 'page-content-wrapper' },
-	                _react2.default.createElement(
+
+	            if (this.state.type === "about") {
+	                return _react2.default.createElement(
 	                    'div',
-	                    { className: 'container-fluid' },
-	                    _react2.default.createElement(_Parent2.default, { type: this.state.type, key: Math.random }),
-	                    _react2.default.createElement('div', { className: 'fb-messengermessageus',
-	                        messenger_app_id: '1409544869075027',
-	                        page_id: '207194423062400',
-	                        color: 'blue',
-	                        size: 'standard' }),
-	                    _react2.default.createElement('div', { className: 'fb-send', 'data-href': 'https://play.dhis2.org/demo/api/maps/ZBjCfSaLSqD/data' }),
-	                    _react2.default.createElement('div', { className: 'fb-like', 'data-href': 'https://www.facebook.com/DHIS-Community-207194423062400/', 'data-layout': 'standard', 'data-action': 'like', 'data-size': 'large', 'data-show-faces': 'true', 'data-share': 'true' })
-	                )
-	            );
+	                    { id: 'page-content-wrapper' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'container-fluid' },
+	                        _react2.default.createElement(_About2.default, null)
+	                    )
+	                );
+	            } else {
+	                return _react2.default.createElement(
+	                    'div',
+	                    { id: 'page-content-wrapper' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'container-fluid' },
+	                        _react2.default.createElement(_Parent2.default, { type: this.state.type, key: Math.random })
+	                    )
+	                );
+	            }
 	        }
 	    }, {
 	        key: 'componentWillReceiveProps',
@@ -26562,6 +26598,10 @@
 
 	var _Widget2 = _interopRequireDefault(_Widget);
 
+	var _PivotRow = __webpack_require__(490);
+
+	var _PivotRow2 = _interopRequireDefault(_PivotRow);
+
 	var _reactBootstrap = __webpack_require__(237);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -26592,31 +26632,61 @@
 	            var self = this;
 	            console.log("coucou c'est moi");
 	            console.log(self.state.type);
-	            return _react2.default.createElement(
-	                'div',
-	                null,
-	                _react2.default.createElement(
-	                    _reactBootstrap.Row,
-	                    null,
+
+	            if (self.state.type === "reportTables") {
+	                return _react2.default.createElement(
+	                    'div',
+	                    { id: 'mainContent' },
+	                    _react2.default.createElement(
+	                        _reactBootstrap.Row,
+	                        null,
+	                        _react2.default.createElement(
+	                            'div',
+	                            { id: 'typeTitle', className: 'col-lg-12' },
+	                            _react2.default.createElement(
+	                                'h1',
+	                                null,
+	                                'Favorite ',
+	                                self.state.type
+	                            )
+	                        )
+	                    ),
 	                    _react2.default.createElement(
 	                        'div',
-	                        { id: 'typeTitle', className: 'col-lg-12' },
-	                        _react2.default.createElement(
-	                            'h1',
-	                            null,
-	                            'Favorite ',
-	                            self.state.type
-	                        )
+	                        null,
+	                        this.state.data.map(function (val) {
+	                            return _react2.default.createElement(_PivotRow2.default, { id: val.id, name: val.name, key: Math.random() });
+	                        })
 	                    )
-	                ),
-	                _react2.default.createElement(
+	                );
+	            } else {
+	                return _react2.default.createElement(
 	                    'div',
-	                    null,
-	                    this.state.data.map(function (val) {
-	                        return _react2.default.createElement(_Widget2.default, { username: 'admin', password: 'district', id: val.id, type: self.state.type, key: Math.random() });
-	                    })
-	                )
-	            );
+	                    { id: 'mainContent' },
+	                    _react2.default.createElement(
+	                        _reactBootstrap.Row,
+	                        null,
+	                        _react2.default.createElement(
+	                            'div',
+	                            { id: 'typeTitle', className: 'col-lg-12' },
+	                            _react2.default.createElement(
+	                                'h1',
+	                                null,
+	                                'Favorite ',
+	                                self.state.type
+	                            )
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        null,
+	                        this.state.data.map(function (val) {
+	                            return _react2.default.createElement(_Widget2.default, { username: 'admin', password: 'district', id: val.id, name: val.name,
+	                                type: self.state.type, key: Math.random() });
+	                        })
+	                    )
+	                );
+	            }
 	        }
 	    }, {
 	        key: 'componentWillMount',
@@ -26673,6 +26743,12 @@
 	                            var name = data.charts[i].displayName;
 	                            outputData.push({ id: id, name: name });
 	                        }
+	                    } else if (type === 'reportTables') {
+	                        for (var i = 0; i < data.reportTables.length; i++) {
+	                            var id = data.reportTables[i].id;
+	                            var name = data.reportTables[i].displayName;
+	                            outputData.push({ id: id, name: name });
+	                        }
 	                    }
 
 	                    self.setState({ data: outputData });
@@ -26716,6 +26792,10 @@
 
 	var _ShareButton2 = _interopRequireDefault(_ShareButton);
 
+	var _domToImage = __webpack_require__(489);
+
+	var _domToImage2 = _interopRequireDefault(_domToImage);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -26734,17 +26814,18 @@
 
 	        var _this = _possibleConstructorReturn(this, (Widget.__proto__ || Object.getPrototypeOf(Widget)).call(this, props));
 
-	        _this.state = { source: '', type: _this.props.type };
+	        _this.state = { source: '', type: _this.props.type, showModal: false, divhide: '' };
 	        return _this;
 	    }
 
 	    _createClass(Widget, [{
 	        key: 'render',
 	        value: function render() {
-	            var source = 'http://' + this.props.username + ':' + this.props.password + '@localhost:8082/api/' + this.state.type + '/' + this.props.id + '/data';
+
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'widgetImg' },
+	                _react2.default.createElement('div', { id: 'lol' }),
 	                _react2.default.createElement(
 	                    'div',
 	                    { className: 'panel panel-default' },
@@ -26752,7 +26833,8 @@
 	                        'div',
 	                        { className: 'panel-heading' },
 	                        _react2.default.createElement('i', { className: 'fa fa-bar-chart-o fa-fw' }),
-	                        ' Area Chart Example',
+	                        ' ',
+	                        this.props.name,
 	                        _react2.default.createElement(
 	                            'div',
 	                            { className: 'pull-right' },
@@ -26766,15 +26848,141 @@
 	                    _react2.default.createElement(
 	                        'div',
 	                        { className: 'panel-body' },
-	                        _react2.default.createElement(_reactBootstrap.Image, { className: 'widgetImgTest', src: source, rounded: true })
+	                        _react2.default.createElement(_reactBootstrap.Image, { className: 'widgetImgTest', src: this.state.source, rounded: true, onClick: this._previewImage.bind(this) })
+	                    ),
+	                    _react2.default.createElement(
+	                        _reactBootstrap.Modal,
+	                        { show: this.state.showModal, onHide: this._close.bind(this) },
+	                        _react2.default.createElement(
+	                            _reactBootstrap.Modal.Header,
+	                            { closeButton: true },
+	                            _react2.default.createElement(
+	                                _reactBootstrap.Modal.Title,
+	                                null,
+	                                'Preview'
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            _reactBootstrap.Modal.Body,
+	                            null,
+	                            _react2.default.createElement(
+	                                _reactBootstrap.Row,
+	                                { bsClass: 'text-center' },
+	                                _react2.default.createElement(
+	                                    'p',
+	                                    null,
+	                                    this.props.name
+	                                )
+	                            ),
+	                            _react2.default.createElement(
+	                                _reactBootstrap.Row,
+	                                null,
+	                                _react2.default.createElement(_reactBootstrap.Image, { onLoad: this._hideLoading, id: 'sharedImgModal', src: this.state.source, rounded: true }),
+	                                _react2.default.createElement(
+	                                    'div',
+	                                    { id: 'loading' },
+	                                    _react2.default.createElement('img', { id: 'loader', src: 'src/loading1.gif' })
+	                                )
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            _reactBootstrap.Modal.Footer,
+	                            null,
+	                            _react2.default.createElement(
+	                                _reactBootstrap.Button,
+	                                { onClick: this._close.bind(this) },
+	                                'Close'
+	                            )
+	                        )
 	                    )
 	                )
 	            );
 	        }
 	    }, {
+	        key: 'componentWillMount',
+	        value: function componentWillMount() {
+	            this._getSource();
+	        }
+	    }, {
 	        key: 'componentWillReceiveProps',
 	        value: function componentWillReceiveProps(nextProps) {
 	            this.setState({ type: nextProps.type });
+	            this._getSource();
+	        }
+	    }, {
+	        key: '_getSource',
+	        value: function _getSource() {
+	            var source = '';
+	            if (this.state.type === 'reportTables') {
+	                this._getHtmlTable();
+	            } else {
+	                source = 'http://' + this.props.username + ':' + this.props.password + '@localhost:8082/api/' + this.state.type + '/' + this.props.id + '/data';
+	                this.setState({ source: source });
+	            }
+	        }
+	    }, {
+	        key: '_previewImage',
+	        value: function _previewImage() {
+	            this.setState({ showModal: true });
+	        }
+	    }, {
+	        key: '_close',
+	        value: function _close() {
+	            this.setState({ showModal: false });
+	        }
+	    }, {
+	        key: '_convert',
+	        value: function _convert(node) {
+	            //var node = document.getElementById('my-table');
+	            var div = document.createElement('div');
+	            div.innerHTML = node;
+	            div.setAttribute("class", 'hiddendiv');
+	            div.setAttribute("id", this.props.id + 'm');
+	            console.log(div.firstChild);
+
+	            document.getElementById('my-table').appendChild(div);
+
+	            var d = document.getElementById(this.props.id + 'm');
+
+	            //this.setState({divhide:div.firstChild});
+
+	            //var content = document.getElementById(this.props.id + 'm');
+
+	            var self = this;
+
+	            _domToImage2.default.toPng(d).then(function (dataUrl) {
+	                var img = new _reactBootstrap.Image();
+	                img.src = dataUrl;
+	                console.log(dataUrl);
+	                console.log(d);
+	                //document.body.appendChild(img);
+	                self.setState({ source: dataUrl });
+	                $('#' + self.props.id + 'm').remove();
+	            }).catch(function (error) {
+	                console.error('oops, something went wrong!', error);
+	            });
+	        }
+	    }, {
+	        key: '_getHtmlTable',
+	        value: function _getHtmlTable() {
+	            var username = 'admin',
+	                password = 'district';
+	            var url = 'http://localhost:8082/api/' + this.state.type + '/' + this.props.id + '/data.html';
+	            console.log(url);
+	            var self = this;
+	            $.ajax({
+	                url: url,
+	                type: 'GET',
+	                dataType: 'text',
+	                headers: {
+	                    "Authorization": "Basic " + btoa(username + ":" + password)
+	                },
+	                success: function success(data) {
+	                    console.log("coucou");
+	                    //console.log(data);
+	                    self._convert(data);
+	                }
+	            });
 	        }
 	        // componentWillMount(){
 	        //     this.setState({source:source});
@@ -31489,7 +31697,7 @@
 	  /**
 	   * Only valid if `inline` is not set.
 	   */
-	  validationState: _react2['default'].PropTypes.oneOf(['success', 'warning', 'error']),
+	  validationState: _react2['default'].PropTypes.oneOf(['success', 'warning', 'error', null]),
 	  /**
 	   * Attaches a ref to the `<input>` element. Only functions can be used here.
 	   *
@@ -33188,7 +33396,16 @@
 	  /**
 	   * Which event when fired outside the component will cause it to be closed
 	   */
-	  rootCloseEvent: _react2['default'].PropTypes.oneOf(['click', 'mousedown'])
+	  rootCloseEvent: _react2['default'].PropTypes.oneOf(['click', 'mousedown']),
+
+	  /**
+	   * @private
+	   */
+	  onMouseEnter: _react2['default'].PropTypes.func,
+	  /**
+	   * @private
+	   */
+	  onMouseLeave: _react2['default'].PropTypes.func
 	};
 
 	var defaultProps = {
@@ -35238,7 +35455,15 @@
 	  /**
 	   * Uses `controlId` from `<FormGroup>` if not explicitly specified.
 	   */
-	  id: _react2['default'].PropTypes.string
+	  id: _react2['default'].PropTypes.string,
+	  /**
+	   * Attaches a ref to the `<input>` element. Only functions can be used here.
+	   *
+	   * ```js
+	   * <FormControl inputRef={ref => { this.input = ref; }} />
+	   * ```
+	   */
+	  inputRef: _react2['default'].PropTypes.func
 	};
 
 	var defaultProps = {
@@ -35266,8 +35491,9 @@
 	        type = _props.type,
 	        _props$id = _props.id,
 	        id = _props$id === undefined ? controlId : _props$id,
+	        inputRef = _props.inputRef,
 	        className = _props.className,
-	        props = (0, _objectWithoutProperties3['default'])(_props, ['componentClass', 'type', 'id', 'className']);
+	        props = (0, _objectWithoutProperties3['default'])(_props, ['componentClass', 'type', 'id', 'inputRef', 'className']);
 
 	    var _splitBsProps = (0, _bootstrapUtils.splitBsProps)(props),
 	        bsProps = _splitBsProps[0],
@@ -35284,6 +35510,7 @@
 	    return _react2['default'].createElement(Component, (0, _extends3['default'])({}, elementProps, {
 	      type: type,
 	      id: id,
+	      ref: inputRef,
 	      className: (0, _classnames2['default'])(className, classes)
 	    }));
 	  };
@@ -35555,7 +35782,7 @@
 	   * Sets `id` on `<FormControl>` and `htmlFor` on `<FormGroup.Label>`.
 	   */
 	  controlId: _react2['default'].PropTypes.string,
-	  validationState: _react2['default'].PropTypes.oneOf(['success', 'warning', 'error'])
+	  validationState: _react2['default'].PropTypes.oneOf(['success', 'warning', 'error', null])
 	};
 
 	var childContextTypes = {
@@ -38963,9 +39190,21 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _elementType = __webpack_require__(341);
+
+	var _elementType2 = _interopRequireDefault(_elementType);
+
 	var _bootstrapUtils = __webpack_require__(325);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var propTypes = {
+	  componentClass: _elementType2['default']
+	};
+
+	var defaultProps = {
+	  componentClass: 'div'
+	};
 
 	var ModalBody = function (_React$Component) {
 	  (0, _inherits3['default'])(ModalBody, _React$Component);
@@ -38977,8 +39216,9 @@
 
 	  ModalBody.prototype.render = function render() {
 	    var _props = this.props,
+	        Component = _props.componentClass,
 	        className = _props.className,
-	        props = (0, _objectWithoutProperties3['default'])(_props, ['className']);
+	        props = (0, _objectWithoutProperties3['default'])(_props, ['componentClass', 'className']);
 
 	    var _splitBsProps = (0, _bootstrapUtils.splitBsProps)(props),
 	        bsProps = _splitBsProps[0],
@@ -38986,13 +39226,16 @@
 
 	    var classes = (0, _bootstrapUtils.getClassSet)(bsProps);
 
-	    return _react2['default'].createElement('div', (0, _extends3['default'])({}, elementProps, {
+	    return _react2['default'].createElement(Component, (0, _extends3['default'])({}, elementProps, {
 	      className: (0, _classnames2['default'])(className, classes)
 	    }));
 	  };
 
 	  return ModalBody;
 	}(_react2['default'].Component);
+
+	ModalBody.propTypes = propTypes;
+	ModalBody.defaultProps = defaultProps;
 
 	exports['default'] = (0, _bootstrapUtils.bsClass)('modal-body', ModalBody);
 	module.exports = exports['default'];
@@ -39138,9 +39381,21 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _elementType = __webpack_require__(341);
+
+	var _elementType2 = _interopRequireDefault(_elementType);
+
 	var _bootstrapUtils = __webpack_require__(325);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var propTypes = {
+	  componentClass: _elementType2['default']
+	};
+
+	var defaultProps = {
+	  componentClass: 'div'
+	};
 
 	var ModalFooter = function (_React$Component) {
 	  (0, _inherits3['default'])(ModalFooter, _React$Component);
@@ -39152,8 +39407,9 @@
 
 	  ModalFooter.prototype.render = function render() {
 	    var _props = this.props,
+	        Component = _props.componentClass,
 	        className = _props.className,
-	        props = (0, _objectWithoutProperties3['default'])(_props, ['className']);
+	        props = (0, _objectWithoutProperties3['default'])(_props, ['componentClass', 'className']);
 
 	    var _splitBsProps = (0, _bootstrapUtils.splitBsProps)(props),
 	        bsProps = _splitBsProps[0],
@@ -39161,13 +39417,16 @@
 
 	    var classes = (0, _bootstrapUtils.getClassSet)(bsProps);
 
-	    return _react2['default'].createElement('div', (0, _extends3['default'])({}, elementProps, {
+	    return _react2['default'].createElement(Component, (0, _extends3['default'])({}, elementProps, {
 	      className: (0, _classnames2['default'])(className, classes)
 	    }));
 	  };
 
 	  return ModalFooter;
 	}(_react2['default'].Component);
+
+	ModalFooter.propTypes = propTypes;
+	ModalFooter.defaultProps = defaultProps;
 
 	exports['default'] = (0, _bootstrapUtils.bsClass)('modal-footer', ModalFooter);
 	module.exports = exports['default'];
@@ -39345,9 +39604,21 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _elementType = __webpack_require__(341);
+
+	var _elementType2 = _interopRequireDefault(_elementType);
+
 	var _bootstrapUtils = __webpack_require__(325);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var propTypes = {
+	  componentClass: _elementType2['default']
+	};
+
+	var defaultProps = {
+	  componentClass: 'h4'
+	};
 
 	var ModalTitle = function (_React$Component) {
 	  (0, _inherits3['default'])(ModalTitle, _React$Component);
@@ -39359,8 +39630,9 @@
 
 	  ModalTitle.prototype.render = function render() {
 	    var _props = this.props,
+	        Component = _props.componentClass,
 	        className = _props.className,
-	        props = (0, _objectWithoutProperties3['default'])(_props, ['className']);
+	        props = (0, _objectWithoutProperties3['default'])(_props, ['componentClass', 'className']);
 
 	    var _splitBsProps = (0, _bootstrapUtils.splitBsProps)(props),
 	        bsProps = _splitBsProps[0],
@@ -39368,13 +39640,16 @@
 
 	    var classes = (0, _bootstrapUtils.getClassSet)(bsProps);
 
-	    return _react2['default'].createElement('h4', (0, _extends3['default'])({}, elementProps, {
+	    return _react2['default'].createElement(Component, (0, _extends3['default'])({}, elementProps, {
 	      className: (0, _classnames2['default'])(className, classes)
 	    }));
 	  };
 
 	  return ModalTitle;
 	}(_react2['default'].Component);
+
+	ModalTitle.propTypes = propTypes;
+	ModalTitle.defaultProps = defaultProps;
 
 	exports['default'] = (0, _bootstrapUtils.bsClass)('modal-title', ModalTitle);
 	module.exports = exports['default'];
@@ -40066,13 +40341,13 @@
 
 	function createSimpleWrapper(tag, suffix, displayName) {
 	  var Wrapper = function Wrapper(_ref, _ref2) {
+	    var _ref2$$bs_navbar = _ref2.$bs_navbar,
+	        navbarProps = _ref2$$bs_navbar === undefined ? { bsClass: 'navbar' } : _ref2$$bs_navbar;
 	    var Component = _ref.componentClass,
 	        className = _ref.className,
 	        pullRight = _ref.pullRight,
 	        pullLeft = _ref.pullLeft,
 	        props = (0, _objectWithoutProperties3['default'])(_ref, ['componentClass', 'className', 'pullRight', 'pullLeft']);
-	    var _ref2$$bs_navbar = _ref2.$bs_navbar,
-	        navbarProps = _ref2$$bs_navbar === undefined ? { bsClass: 'navbar' } : _ref2$$bs_navbar;
 	    return _react2['default'].createElement(Component, (0, _extends4['default'])({}, props, {
 	      className: (0, _classnames2['default'])(className, (0, _bootstrapUtils.prefix)(navbarProps, suffix), pullRight && (0, _bootstrapUtils.prefix)(navbarProps, 'right'), pullLeft && (0, _bootstrapUtils.prefix)(navbarProps, 'left'))
 	    }));
@@ -40847,13 +41122,19 @@
 	  /**
 	   * Callback fired after the Overlay finishes transitioning out
 	   */
-	  onExited: _react2['default'].PropTypes.func
+	  onExited: _react2['default'].PropTypes.func,
+
+	  /**
+	   * Sets the direction of the Overlay.
+	   */
+	  placement: _react2['default'].PropTypes.oneOf(['top', 'right', 'bottom', 'left'])
 	});
 
 	var defaultProps = {
 	  animation: _Fade2['default'],
 	  rootClose: false,
-	  show: false
+	  show: false,
+	  placement: 'right'
 	};
 
 	var Overlay = function (_React$Component) {
@@ -42971,10 +43252,6 @@
 	    }
 	  };
 
-	  Panel.prototype.shouldRenderFill = function shouldRenderFill(child) {
-	    return _react2['default'].isValidElement(child) && child.props.fill != null;
-	  };
-
 	  Panel.prototype.renderHeader = function renderHeader(collapsible, header, id, role, expanded, bsProps) {
 	    var titleClassName = (0, _bootstrapUtils.prefix)(bsProps, 'title');
 
@@ -43540,7 +43817,7 @@
 	  /**
 	   * Only valid if `inline` is not set.
 	   */
-	  validationState: _react2['default'].PropTypes.oneOf(['success', 'warning', 'error']),
+	  validationState: _react2['default'].PropTypes.oneOf(['success', 'warning', 'error', null]),
 	  /**
 	   * Attaches a ref to the `<input>` element. Only functions can be used here.
 	   *
@@ -45469,51 +45746,6 @@
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by ophelie on 07/11/2016.
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
 
-	function getBase64Image(img) {
-	    // Create an empty canvas element
-	    var canvas = document.createElement("canvas");
-	    canvas.width = img.width;
-	    canvas.height = img.height;
-
-	    // Copy the image contents to the canvas
-	    var ctx = canvas.getContext("2d");
-	    ctx.drawImage(img, 0, 0);
-
-	    // Get the data-URL formatted image
-	    // Firefox supports PNG and JPEG. You could check img.src to
-	    // guess the original format, but be aware the using "image/jpg"
-	    // will re-encode the image.
-	    var dataURL = canvas.toDataURL("image/png");
-
-	    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-	}
-
-	//Convert base64 into blob
-	//cf http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
-	function b64toBlob(b64Data, contentType, sliceSize) {
-	    contentType = contentType || '';
-	    sliceSize = sliceSize || 512;
-
-	    var byteCharacters = atob(b64Data);
-	    var byteArrays = [];
-
-	    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-	        var slice = byteCharacters.slice(offset, offset + sliceSize);
-
-	        var byteNumbers = new Array(slice.length);
-	        for (var i = 0; i < slice.length; i++) {
-	            byteNumbers[i] = slice.charCodeAt(i);
-	        }
-
-	        var byteArray = new Uint8Array(byteNumbers);
-
-	        byteArrays.push(byteArray);
-	    }
-
-	    var blob = new Blob(byteArrays, { type: contentType });
-	    return blob;
-	}
-
 	var ShareButton = function (_React$Component) {
 	    _inherits(ShareButton, _React$Component);
 
@@ -45522,7 +45754,7 @@
 
 	        var _this = _possibleConstructorReturn(this, (ShareButton.__proto__ || Object.getPrototypeOf(ShareButton)).call(this, props));
 
-	        _this.state = { showModal: false, show: false, comment: 'Your comment', social: 'fb' };
+	        _this.state = { showModal: false, show: false, comment: '', social: 'fb', disabled: "disabled", nodisplay: "", maxlength: 0, text: "" };
 	        return _this;
 	    }
 
@@ -45533,17 +45765,20 @@
 	            var sharedProps = {
 	                show: this.state.show,
 	                container: this
-
 	            };
 
-	            var source = 'http://localhost:8082/api/maps/' + this.props.id + '/data';
+	            if (this.props.type == "reportTables") {
+	                var source = this.props.source;
+	            } else {
+	                var source = 'http://localhost:8082/api/' + this.props.type + '/' + this.props.id + '/data';
+	            }
 
 	            return _react2.default.createElement(
 	                'div',
-	                null,
+	                { className: 'containerButton' },
 	                _react2.default.createElement(
 	                    'a',
-	                    { onClick: this._toggle.bind(this) },
+	                    { id: 'btnShare', onClick: this._toggle.bind(this) },
 	                    _react2.default.createElement('i', { className: 'fa fa-share-alt' })
 	                ),
 	                _react2.default.createElement(
@@ -45574,17 +45809,17 @@
 	                        _react2.default.createElement(
 	                            _reactBootstrap.Row,
 	                            null,
-	                            _react2.default.createElement(_Image2.default, { onLoad: this._hideLoading, id: 'sharedImgModal', src: source, rounded: true }),
 	                            _react2.default.createElement(
 	                                'div',
 	                                { id: 'loading' },
-	                                _react2.default.createElement('img', { id: 'loader', src: 'src/loading1.gif' })
-	                            )
+	                                _react2.default.createElement('img', { id: 'loader', className: this.state.nodisplay, src: 'src/loading1.gif' })
+	                            ),
+	                            _react2.default.createElement(_Image2.default, { onLoad: this._hideLoading.bind(this), id: 'sharedImgModal', src: source, rounded: true })
 	                        ),
 	                        _react2.default.createElement(
 	                            'div',
 	                            { id: 'modalQuestion' },
-	                            'Add your comment:'
+	                            this.state.text
 	                        ),
 	                        _react2.default.createElement(
 	                            _reactBootstrap.Row,
@@ -45592,7 +45827,7 @@
 	                            _react2.default.createElement(
 	                                'form',
 	                                null,
-	                                _react2.default.createElement('textarea', { className: 'form-control', rows: '3', value: this.state.comment, onChange: this._handle_comment_change.bind(this) })
+	                                _react2.default.createElement('textarea', { className: 'form-control', placeholder: 'Enter your comment here... ', rows: '3', maxLength: this.state.maxlength, value: this.state.comment, onChange: this._handle_comment_change.bind(this) })
 	                            )
 	                        )
 	                    ),
@@ -45606,12 +45841,26 @@
 	                        ),
 	                        _react2.default.createElement(
 	                            _reactBootstrap.Button,
-	                            { onClick: this._confirm_publish.bind(this) },
+	                            { id: 'publish', onClick: this._confirm_publish.bind(this), disabled: this.state.disabled },
 	                            'Publish'
 	                        )
 	                    )
 	                )
 	            );
+	        }
+	    }, {
+	        key: 'componentDidUpdate',
+	        value: function componentDidUpdate(prevProps, prevState) {
+
+	            console.log(prevState.showModal);
+
+	            if (prevState.showModal == false && this.state.showModal == true && this.state.type != "reportTables") {
+	                var $image = (0, _jquery2.default)('#sharedImgModal');
+
+	                if ($image[0].complete) {
+	                    this._hideLoading();
+	                }
+	            }
 	        }
 	    }, {
 	        key: '_close',
@@ -45621,8 +45870,18 @@
 	    }, {
 	        key: '_open',
 	        value: function _open(social) {
-	            console.log(social);
+	            //close tooltip
+	            if (social == 'fb') {
+	                this.setState({ maxlength: 1000, text: "Enter Your comment" });
+	            }
+	            if (social == 'tw') {
+	                console.log("");
+	                this.setState({ maxlength: 140, text: "Enter Your comment (Max 140 caracters)" });
+	            }
+	            this.setState({ show: false });
 	            this.setState({ showModal: true, social: social });
+
+	            console.log(social);
 	        }
 	    }, {
 	        key: '_toggle',
@@ -45643,133 +45902,163 @@
 	                this._uploadFacebook();
 	            }
 	            if (this.state.social == 'tw') {
-	                console.log('FBBB');
+	                console.log('TW');
 	                this._uploadTwitter();
 	            }
 	        }
 	    }, {
 	        key: '_hideLoading',
 	        value: function _hideLoading() {
-	            (0, _jquery2.default)("#loading").hide();
+	            //$("#loading").hide()
+	            this.setState({ nodisplay: "nodisplay" });
+	            this.setState({ disabled: "" });
+	            //$("#publish").prop('disabled', false);
 	        }
 	    }, {
 	        key: '_uploadTwitter',
 	        value: function _uploadTwitter() {
 
-	            var comment = this.state.comment;
+	            var self = this;
 
-	            var close = this._close();
+	            if (this.props.type == "reportTables") {
+	                var image = this.props.source;
+	                image = image.replace(/^data:image\/(png|jpg);base64,/, "");
+	            } else {
+	                var image = self._getBase64Image(document.getElementById("sharedImgModal"));
+	            }
 
-	            var contentType = 'image/png';
+	            console.log(image);
 
-	            var img = new Image();
-	            img.src = "http://localhost:8082/api/" + this.props.type + "/" + this.props.id + "/data";
+	            // Initialize with your OAuth.io app public key
+	            OAuth.initialize('SB6S4-dwB3azNlMTtoqSvhvLNv8');
 
-	            console.log(img);
-	            var logo = "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAKfSURBVHjabJNNSFRRGIafc+6d8Y6OM42aTmpNauRgUVBRVEwZCC6kdtGqRRBtWkWLKGgXtghaRIsK3ES0L4pKCPpZREX2oxnVlOn4V4026Tjj3HvPPS2asRp64OODw8v3cXjfTxinrlOGBHSxzgPjxW4Cqvj+j7icy8AVIAIcK5YPuAMc/9+2fxEioWz3sFoozCrloVzVrLKLtud6XQiRKKlKcrPYo8AbhEiq+Xxba2MN7dEwtqsQCExT8moszfRMNmFUWwN4uhKI/z1gHikCai6/fefaRlqiYW6+HGEunQU00cYaejbGeJacjgym0hEjGBhC66UvhIEWlbPHN6yqo7UhzLUbz9mxup65C4dInTtIxPLRd/sFW1vqaaoNoRw1DawAQhI4Awzi6fjahjD97ybAUfTuWc+Je6+5l5zmTOc6mMnydOQbm2N1sGh3AZNArwR6Pa0fRGqD5BYdvk7MEoo3sbG1npXVFsv8JtviTdAWZWjyB8pRUOkHuAqcNYEpDQOmFJ2O8iCbpyfegRSCk53rlszZFKtjYCiFqzyElAAPgQkTuGgIcfR7JkeouRYCfrw/Li1RcD38oQCW5UMvFKCqog/YYgJ9QAbHPTKbt5cnNrVy980op+uCzOVshBCYhmR4LM2+DTFG0vNgGu+BS8AjUYqyFiLp5QttBza38flnjudPPoDt/k5ulUX37g6k43JncAwjGOhH626A0oA1wEfl6UVs10q0NxK2fGQLLkJAqMLHeGaBF5++KllVYQjIF+13SkFKAi2GFN+wfMOP36ZiZqWfppogrqeZTM+jXYURtO4XN8cAp/wWvgA5YMoIWiOelPtHZ7JMZBYywm/uNSorQOvRona0/Bb+ZhcgBRQMQ14CUsAtoAoolIt/DQBMqAUSa5wR2gAAAABJRU5ErkJggg==";
+	            OAuth.popup("twitter").then(function (result) {
+	                console.log(result);
+	                var data = new FormData();
+	                data.append('status', self.state.comment);
+	                data.append('media[]', self._b64toBlob(image), 'logo.jpg');
 
-	            img.addEventListener('load', function () {
-	                var image = getBase64Image(img);
-	                console.log("couocuocuocuc");
-	                console.log(image);
-	                //var blob = b64toBlob(image, contentType);
-	                // var name =  type + 'png';
-
-	                // Initialize with your OAuth.io app public key
-	                OAuth.initialize('SB6S4-dwB3azNlMTtoqSvhvLNv8');
-
-	                OAuth.popup("twitter").then(function (result) {
-	                    console.log(result);
-	                    var data = new FormData();
-	                    data.append('status', comment);
-	                    data.append('media[]', b64toBlob(image), 'logo.png');
-
-	                    return result.post('/1.1/statuses/update_with_media.json', {
-	                        data: data,
-	                        cache: false,
-	                        processData: false,
-	                        contentType: false
-	                    });
-	                }).done(function (data) {
-	                    var str = JSON.stringify(data, null, 2);
-	                    //$('#result').html("Success\n" + str).show()
-	                    console.log("Success\n" + str);
-	                    close;
-	                }).fail(function (e) {
-	                    var errorTxt = JSON.stringify(e, null, 2);
-	                    //$('#result').html("Error\n" + errorTxt).show()
-	                    console.log("Error\n" + errorTxt);
+	                return result.post('/1.1/statuses/update_with_media.json', {
+	                    data: data,
+	                    cache: false,
+	                    processData: false,
+	                    contentType: false
 	                });
+	            }).done(function (data) {
+	                var str = JSON.stringify(data, null, 2);
+	                //$('#result').html("Success\n" + str).show()
+	                console.log("Success\n" + str);
+	                self._close();
+	            }).fail(function (e) {
+	                var errorTxt = JSON.stringify(e, null, 2);
+	                //$('#result').html("Error\n" + errorTxt).show()
+	                console.log("Error\n" + errorTxt);
 	            });
 	        }
 	    }, {
 	        key: '_uploadFacebook',
 	        value: function _uploadFacebook() {
-
-	            var comment = this.state.comment;
-	            var close = this._close();
-
 	            var contentType = 'image/png';
 
-	            var img = new Image();
-	            img.src = "http://localhost:8082/api/" + this.props.type + "/" + this.props.id + "/data";
+	            var self = this;
 
-	            console.log(img);
-	            (0, _jquery2.default)("#modal1").show();
+	            if (this.props.type == "reportTables") {
+	                var image = this.props.source;
+	                image = image.replace(/^data:image\/(png|jpg);base64,/, "");
+	            } else {
 
-	            img.addEventListener('load', function () {
-	                var image = getBase64Image(img);
-	                console.log("couocuocuocuc");
-	                console.log(image);
-	                var blob = b64toBlob(image, contentType);
-	                //var blobUrl = URL.createObjectURL(blob);
+	                var image = self._getBase64Image(document.getElementById("sharedImgModal"));
+	            }
 
+	            console.log("couocuocuocuc");
+	            console.log(image);
+	            var blob = self._b64toBlob(image, contentType);
+	            //var blobUrl = URL.createObjectURL(blob);
 
-	                FB.login(function () {
-	                    // FB.getLoginStatus(function(response) {
-	                    //if (response.status === 'connected') {
-	                    // var access_token = response.authResponse.accessToken;
+	            FB.login(function () {
 
-	                    var access_token = FB.getAuthResponse()['accessToken'];
-	                    console.log('Access Token = ' + access_token);
+	                var access_token = FB.getAuthResponse()['accessToken'];
+	                console.log('Access Token = ' + access_token);
 
-	                    //fd.append("access_token",access_token);
+	                var fd = new FormData();
+	                fd.append("access_token", access_token);
+	                fd.append("source", blob);
+	                fd.append("message", self.state.comment);
+	                try {
+	                    _jquery2.default.ajax({
+	                        url: "https://graph.facebook.com/me/photos?access_token=" + access_token,
+	                        type: "POST",
+	                        data: fd,
+	                        processData: false,
+	                        contentType: false,
+	                        cache: false,
 
-	                    var fd = new FormData();
-	                    fd.append("access_token", access_token);
-	                    fd.append("source", blob);
-	                    fd.append("message", comment);
-	                    try {
-	                        _jquery2.default.ajax({
-	                            url: "https://graph.facebook.com/me/photos?access_token=" + access_token,
-	                            type: "POST",
-	                            data: fd,
-	                            processData: false,
-	                            contentType: false,
-	                            cache: false,
+	                        success: function success(data) {
+	                            console.log("success " + data.id);
+	                            var url = "https://www.facebook.com/photo.php?fbid=" + data.id;
+	                            (0, _jquery2.default)(".fb-send").attr("data-href", url);
+	                        },
+	                        error: function error(shr, status, data) {
+	                            console.log("error " + data + " Status " + shr.status);
+	                        },
+	                        complete: function complete() {
+	                            console.log("Posted to facebook");
+	                            (0, _jquery2.default)("#modal1").hide();
+	                            (0, _jquery2.default)("#fade").hide();
+	                            self._close();
+	                        }
+	                    });
+	                } catch (e) {
+	                    console.log(e);
+	                }
+	            }, { scope: 'publish_actions,user_photos' });
+	        }
+	    }, {
+	        key: '_b64toBlob',
+	        value: function _b64toBlob(b64Data, contentType, sliceSize) {
+	            //Convert base64 into blob
+	            //cf http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
+	            contentType = contentType || '';
+	            sliceSize = sliceSize || 512;
 
-	                            success: function success(data) {
-	                                console.log("success " + data.id);
-	                                var url = "https://www.facebook.com/photo.php?fbid=" + data.id;
-	                                (0, _jquery2.default)(".fb-send").attr("data-href", url);
-	                            },
-	                            error: function error(shr, status, data) {
-	                                console.log("error " + data + " Status " + shr.status);
-	                            },
-	                            complete: function complete() {
-	                                console.log("Posted to facebook");
-	                                (0, _jquery2.default)("#modal1").hide();
-	                                (0, _jquery2.default)("#fade").hide();
-	                                close;
-	                            }
-	                        });
-	                    } catch (e) {
-	                        console.log(e);
-	                    }
-	                }, { scope: 'publish_actions,user_photos' });
-	            });
+	            var byteCharacters = atob(b64Data);
+	            var byteArrays = [];
 
-	            //Call function to close the modal
+	            for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+	                var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+	                var byteNumbers = new Array(slice.length);
+	                for (var i = 0; i < slice.length; i++) {
+	                    byteNumbers[i] = slice.charCodeAt(i);
+	                }
+
+	                var byteArray = new Uint8Array(byteNumbers);
+
+	                byteArrays.push(byteArray);
+	            }
+
+	            var blob = new Blob(byteArrays, { type: contentType });
+	            return blob;
+	        }
+	    }, {
+	        key: '_getBase64Image',
+	        value: function _getBase64Image(img) {
+	            // Create an empty canvas element
+	            var canvas = document.createElement("canvas");
+	            canvas.width = img.width;
+	            canvas.height = img.height;
+
+	            // Copy the image contents to the canvas
+	            var ctx = canvas.getContext("2d");
+	            ctx.drawImage(img, 0, 0);
+
+	            // Get the data-URL formatted image
+	            // Firefox supports PNG and JPEG. You could check img.src to
+	            // guess the original format, but be aware the using "image/jpg"
+	            // will re-encode the image.
+	            var dataURL = canvas.toDataURL("image/jpg");
+
+	            return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
 	        }
 	    }]);
 
@@ -45787,10 +46076,6 @@
 	    if (typeof __REACT_HOT_LOADER__ === 'undefined') {
 	        return;
 	    }
-
-	    __REACT_HOT_LOADER__.register(getBase64Image, 'getBase64Image', 'C:/Users/Julien/Desktop/Open Source/Project/dhis2-live (2)/dhis-live/webapps/dhis/dhis2-message-app/app/Components/ShareButton.jsx');
-
-	    __REACT_HOT_LOADER__.register(b64toBlob, 'b64toBlob', 'C:/Users/Julien/Desktop/Open Source/Project/dhis2-live (2)/dhis-live/webapps/dhis/dhis2-message-app/app/Components/ShareButton.jsx');
 
 	    __REACT_HOT_LOADER__.register(ShareButton, 'ShareButton', 'C:/Users/Julien/Desktop/Open Source/Project/dhis2-live (2)/dhis-live/webapps/dhis/dhis2-message-app/app/Components/ShareButton.jsx');
 	}();
@@ -56027,13 +56312,1005 @@
 /* 489 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	(function (global) {
+	    'use strict';
+
+	    var util = newUtil();
+	    var inliner = newInliner();
+	    var fontFaces = newFontFaces();
+	    var images = newImages();
+
+	    var domtoimage = {
+	        toSvg: toSvg,
+	        toPng: toPng,
+	        toJpeg: toJpeg,
+	        toBlob: toBlob,
+	        toPixelData: toPixelData,
+	        impl: {
+	            fontFaces: fontFaces,
+	            images: images,
+	            util: util,
+	            inliner: inliner
+	        }
+	    };
+
+	    if (true)
+	        module.exports = domtoimage;
+	    else
+	        global.domtoimage = domtoimage;
+
+
+	    /**
+	     * @param {Node} node - The DOM Node object to render
+	     * @param {Object} options - Rendering options
+	     * @param {Function} options.filter - Should return true if passed node should be included in the output
+	     *          (excluding node means excluding it's children as well). Not called on the root node.
+	     * @param {String} options.bgcolor - color for the background, any valid CSS color value.
+	     * @param {Number} options.width - width to be applied to node before rendering.
+	     * @param {Number} options.height - height to be applied to node before rendering.
+	     * @param {Object} options.style - an object whose properties to be copied to node's style before rendering.
+	     * @param {Number} options.quality - a Number between 0 and 1 indicating image quality (applicable to JPEG only),
+	                defaults to 1.0.
+	     * @return {Promise} - A promise that is fulfilled with a SVG image data URL
+	     * */
+	    function toSvg(node, options) {
+	        options = options || {};
+	        return Promise.resolve(node)
+	            .then(function (node) {
+	                return cloneNode(node, options.filter, true);
+	            })
+	            .then(embedFonts)
+	            .then(inlineImages)
+	            .then(applyOptions)
+	            .then(function (clone) {
+	                return makeSvgDataUri(clone,
+	                    options.width || util.width(node),
+	                    options.height || util.height(node)
+	                );
+	            });
+
+	        function applyOptions(clone) {
+	            if (options.bgcolor) clone.style.backgroundColor = options.bgcolor;
+
+	            if (options.width) clone.style.width = options.width + 'px';
+	            if (options.height) clone.style.height = options.height + 'px';
+
+	            if (options.style)
+	                Object.keys(options.style).forEach(function (property) {
+	                    clone.style[property] = options.style[property];
+	                });
+
+	            return clone;
+	        }
+	    }
+
+	    /**
+	     * @param {Node} node - The DOM Node object to render
+	     * @param {Object} options - Rendering options, @see {@link toSvg}
+	     * @return {Promise} - A promise that is fulfilled with a Uint8Array containing RGBA pixel data.
+	     * */
+	    function toPixelData(node, options) {
+	        return draw(node, options || {})
+	            .then(function (canvas) {
+	                return canvas.getContext('2d').getImageData(
+	                    0,
+	                    0,
+	                    util.width(node),
+	                    util.height(node)
+	                ).data;
+	            });
+	    }
+
+	    /**
+	     * @param {Node} node - The DOM Node object to render
+	     * @param {Object} options - Rendering options, @see {@link toSvg}
+	     * @return {Promise} - A promise that is fulfilled with a PNG image data URL
+	     * */
+	    function toPng(node, options) {
+	        return draw(node, options || {})
+	            .then(function (canvas) {
+	                return canvas.toDataURL();
+	            });
+	    }
+
+	    /**
+	     * @param {Node} node - The DOM Node object to render
+	     * @param {Object} options - Rendering options, @see {@link toSvg}
+	     * @return {Promise} - A promise that is fulfilled with a JPEG image data URL
+	     * */
+	    function toJpeg(node, options) {
+	        options = options || {};
+	        return draw(node, options)
+	            .then(function (canvas) {
+	                return canvas.toDataURL('image/jpeg', options.quality || 1.0);
+	            });
+	    }
+
+	    /**
+	     * @param {Node} node - The DOM Node object to render
+	     * @param {Object} options - Rendering options, @see {@link toSvg}
+	     * @return {Promise} - A promise that is fulfilled with a PNG image blob
+	     * */
+	    function toBlob(node, options) {
+	        return draw(node, options || {})
+	            .then(util.canvasToBlob);
+	    }
+
+	    function draw(domNode, options) {
+	        return toSvg(domNode, options)
+	            .then(util.makeImage)
+	            .then(util.delay(100))
+	            .then(function (image) {
+	                var canvas = newCanvas(domNode);
+	                canvas.getContext('2d').drawImage(image, 0, 0);
+	                return canvas;
+	            });
+
+	        function newCanvas(domNode) {
+	            var canvas = document.createElement('canvas');
+	            canvas.width = options.width || util.width(domNode);
+	            canvas.height = options.height || util.height(domNode);
+
+	            if (options.bgcolor) {
+	                var ctx = canvas.getContext('2d');
+	                ctx.fillStyle = options.bgcolor;
+	                ctx.fillRect(0, 0, canvas.width, canvas.height);
+	            }
+
+	            return canvas;
+	        }
+	    }
+
+	    function cloneNode(node, filter, root) {
+	        if (!root && filter && !filter(node)) return Promise.resolve();
+
+	        return Promise.resolve(node)
+	            .then(makeNodeCopy)
+	            .then(function (clone) {
+	                return cloneChildren(node, clone, filter);
+	            })
+	            .then(function (clone) {
+	                return processClone(node, clone);
+	            });
+
+	        function makeNodeCopy(node) {
+	            if (node instanceof HTMLCanvasElement) return util.makeImage(node.toDataURL());
+	            return node.cloneNode(false);
+	        }
+
+	        function cloneChildren(original, clone, filter) {
+	            var children = original.childNodes;
+	            if (children.length === 0) return Promise.resolve(clone);
+
+	            return cloneChildrenInOrder(clone, util.asArray(children), filter)
+	                .then(function () {
+	                    return clone;
+	                });
+
+	            function cloneChildrenInOrder(parent, children, filter) {
+	                var done = Promise.resolve();
+	                children.forEach(function (child) {
+	                    done = done
+	                        .then(function () {
+	                            return cloneNode(child, filter);
+	                        })
+	                        .then(function (childClone) {
+	                            if (childClone) parent.appendChild(childClone);
+	                        });
+	                });
+	                return done;
+	            }
+	        }
+
+	        function processClone(original, clone) {
+	            if (!(clone instanceof Element)) return clone;
+
+	            return Promise.resolve()
+	                .then(cloneStyle)
+	                .then(clonePseudoElements)
+	                .then(copyUserInput)
+	                .then(fixSvg)
+	                .then(function () {
+	                    return clone;
+	                });
+
+	            function cloneStyle() {
+	                copyStyle(window.getComputedStyle(original), clone.style);
+
+	                function copyStyle(source, target) {
+	                    if (source.cssText) target.cssText = source.cssText;
+	                    else copyProperties(source, target);
+
+	                    function copyProperties(source, target) {
+	                        util.asArray(source).forEach(function (name) {
+	                            target.setProperty(
+	                                name,
+	                                source.getPropertyValue(name),
+	                                source.getPropertyPriority(name)
+	                            );
+	                        });
+	                    }
+	                }
+	            }
+
+	            function clonePseudoElements() {
+	                [':before', ':after'].forEach(function (element) {
+	                    clonePseudoElement(element);
+	                });
+
+	                function clonePseudoElement(element) {
+	                    var style = window.getComputedStyle(original, element);
+	                    var content = style.getPropertyValue('content');
+
+	                    if (content === '' || content === 'none') return;
+
+	                    var className = util.uid();
+	                    clone.className = clone.className + ' ' + className;
+	                    var styleElement = document.createElement('style');
+	                    styleElement.appendChild(formatPseudoElementStyle(className, element, style));
+	                    clone.appendChild(styleElement);
+
+	                    function formatPseudoElementStyle(className, element, style) {
+	                        var selector = '.' + className + ':' + element;
+	                        var cssText = style.cssText ? formatCssText(style) : formatCssProperties(style);
+	                        return document.createTextNode(selector + '{' + cssText + '}');
+
+	                        function formatCssText(style) {
+	                            var content = style.getPropertyValue('content');
+	                            return style.cssText + ' content: ' + content + ';';
+	                        }
+
+	                        function formatCssProperties(style) {
+
+	                            return util.asArray(style)
+	                                .map(formatProperty)
+	                                .join('; ') + ';';
+
+	                            function formatProperty(name) {
+	                                return name + ': ' +
+	                                    style.getPropertyValue(name) +
+	                                    (style.getPropertyPriority(name) ? ' !important' : '');
+	                            }
+	                        }
+	                    }
+	                }
+	            }
+
+	            function copyUserInput() {
+	                if (original instanceof HTMLTextAreaElement) clone.innerHTML = original.value;
+	                if (original instanceof HTMLInputElement) clone.setAttribute("value", original.value);
+	            }
+
+	            function fixSvg() {
+	                if (!(clone instanceof SVGElement)) return;
+	                clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+
+	                if (!(clone instanceof SVGRectElement)) return;
+	                ['width', 'height'].forEach(function (attribute) {
+	                    var value = clone.getAttribute(attribute);
+	                    if (!value) return;
+
+	                    clone.style.setProperty(attribute, value);
+	                });
+	            }
+	        }
+	    }
+
+	    function embedFonts(node) {
+	        return fontFaces.resolveAll()
+	            .then(function (cssText) {
+	                var styleNode = document.createElement('style');
+	                node.appendChild(styleNode);
+	                styleNode.appendChild(document.createTextNode(cssText));
+	                return node;
+	            });
+	    }
+
+	    function inlineImages(node) {
+	        return images.inlineAll(node)
+	            .then(function () {
+	                return node;
+	            });
+	    }
+
+	    function makeSvgDataUri(node, width, height) {
+	        return Promise.resolve(node)
+	            .then(function (node) {
+	                node.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+	                return new XMLSerializer().serializeToString(node);
+	            })
+	            .then(util.escapeXhtml)
+	            .then(function (xhtml) {
+	                return '<foreignObject x="0" y="0" width="100%" height="100%">' + xhtml + '</foreignObject>';
+	            })
+	            .then(function (foreignObject) {
+	                return '<svg xmlns="http://www.w3.org/2000/svg" width="' + width + '" height="' + height + '">' +
+	                    foreignObject + '</svg>';
+	            })
+	            .then(function (svg) {
+	                return 'data:image/svg+xml;charset=utf-8,' + svg;
+	            });
+	    }
+
+	    function newUtil() {
+	        return {
+	            escape: escape,
+	            parseExtension: parseExtension,
+	            mimeType: mimeType,
+	            dataAsUrl: dataAsUrl,
+	            isDataUrl: isDataUrl,
+	            canvasToBlob: canvasToBlob,
+	            resolveUrl: resolveUrl,
+	            getAndEncode: getAndEncode,
+	            uid: uid(),
+	            delay: delay,
+	            asArray: asArray,
+	            escapeXhtml: escapeXhtml,
+	            makeImage: makeImage,
+	            width: width,
+	            height: height
+	        };
+
+	        function mimes() {
+	            /*
+	             * Only WOFF and EOT mime types for fonts are 'real'
+	             * see http://www.iana.org/assignments/media-types/media-types.xhtml
+	             */
+	            var WOFF = 'application/font-woff';
+	            var JPEG = 'image/jpeg';
+
+	            return {
+	                'woff': WOFF,
+	                'woff2': WOFF,
+	                'ttf': 'application/font-truetype',
+	                'eot': 'application/vnd.ms-fontobject',
+	                'png': 'image/png',
+	                'jpg': JPEG,
+	                'jpeg': JPEG,
+	                'gif': 'image/gif',
+	                'tiff': 'image/tiff',
+	                'svg': 'image/svg+xml'
+	            };
+	        }
+
+	        function parseExtension(url) {
+	            var match = /\.([^\.\/]*?)$/g.exec(url);
+	            if (match) return match[1];
+	            else return '';
+	        }
+
+	        function mimeType(url) {
+	            var extension = parseExtension(url).toLowerCase();
+	            return mimes()[extension] || '';
+	        }
+
+	        function isDataUrl(url) {
+	            return url.search(/^(data:)/) !== -1;
+	        }
+
+	        function toBlob(canvas) {
+	            return new Promise(function (resolve) {
+	                var binaryString = window.atob(canvas.toDataURL().split(',')[1]);
+	                var length = binaryString.length;
+	                var binaryArray = new Uint8Array(length);
+
+	                for (var i = 0; i < length; i++)
+	                    binaryArray[i] = binaryString.charCodeAt(i);
+
+	                resolve(new Blob([binaryArray], {
+	                    type: 'image/png'
+	                }));
+	            });
+	        }
+
+	        function canvasToBlob(canvas) {
+	            if (canvas.toBlob)
+	                return new Promise(function (resolve) {
+	                    canvas.toBlob(resolve);
+	                });
+
+	            return toBlob(canvas);
+	        }
+
+	        function resolveUrl(url, baseUrl) {
+	            var doc = document.implementation.createHTMLDocument();
+	            var base = doc.createElement('base');
+	            doc.head.appendChild(base);
+	            var a = doc.createElement('a');
+	            doc.body.appendChild(a);
+	            base.href = baseUrl;
+	            a.href = url;
+	            return a.href;
+	        }
+
+	        function uid() {
+	            var index = 0;
+
+	            return function () {
+	                return 'u' + fourRandomChars() + index++;
+
+	                function fourRandomChars() {
+	                    /* see http://stackoverflow.com/a/6248722/2519373 */
+	                    return ('0000' + (Math.random() * Math.pow(36, 4) << 0).toString(36)).slice(-4);
+	                }
+	            };
+	        }
+
+	        function makeImage(uri) {
+	            return new Promise(function (resolve, reject) {
+	                var image = new Image();
+	                image.onload = function () {
+	                    resolve(image);
+	                };
+	                image.onerror = reject;
+	                image.src = uri;
+	            });
+	        }
+
+	        function getAndEncode(url) {
+	            var TIMEOUT = 30000;
+
+	            return new Promise(function (resolve) {
+	                var request = new XMLHttpRequest();
+
+	                request.onreadystatechange = done;
+	                request.ontimeout = timeout;
+	                request.responseType = 'blob';
+	                request.timeout = TIMEOUT;
+	                request.open('GET', url, true);
+	                request.send();
+
+	                function done() {
+	                    if (request.readyState !== 4) return;
+
+	                    if (request.status !== 200) {
+	                        fail('cannot fetch resource: ' + url + ', status: ' + request.status);
+	                        return;
+	                    }
+
+	                    var encoder = new FileReader();
+	                    encoder.onloadend = function () {
+	                        var content = encoder.result.split(/,/)[1];
+	                        resolve(content);
+	                    };
+	                    encoder.readAsDataURL(request.response);
+	                }
+
+	                function timeout() {
+	                    fail('timeout of ' + TIMEOUT + 'ms occured while fetching resource: ' + url);
+	                }
+
+	                function fail(message) {
+	                    console.error(message);
+	                    resolve('');
+	                }
+	            });
+	        }
+
+	        function dataAsUrl(content, type) {
+	            return 'data:' + type + ';base64,' + content;
+	        }
+
+	        function escape(string) {
+	            return string.replace(/([.*+?^${}()|\[\]\/\\])/g, '\\$1');
+	        }
+
+	        function delay(ms) {
+	            return function (arg) {
+	                return new Promise(function (resolve) {
+	                    setTimeout(function () {
+	                        resolve(arg);
+	                    }, ms);
+	                });
+	            };
+	        }
+
+	        function asArray(arrayLike) {
+	            var array = [];
+	            var length = arrayLike.length;
+	            for (var i = 0; i < length; i++) array.push(arrayLike[i]);
+	            return array;
+	        }
+
+	        function escapeXhtml(string) {
+	            return string.replace(/#/g, '%23').replace(/\n/g, '%0A');
+	        }
+
+	        function width(node) {
+	            var leftBorder = px(node, 'border-left-width');
+	            var rightBorder = px(node, 'border-right-width');
+	            return node.scrollWidth + leftBorder + rightBorder;
+	        }
+
+	        function height(node) {
+	            var topBorder = px(node, 'border-top-width');
+	            var bottomBorder = px(node, 'border-bottom-width');
+	            return node.scrollHeight + topBorder + bottomBorder;
+	        }
+
+	        function px(node, styleProperty) {
+	            var value = window.getComputedStyle(node).getPropertyValue(styleProperty);
+	            return parseFloat(value.replace('px', ''));
+	        }
+	    }
+
+	    function newInliner() {
+	        var URL_REGEX = /url\(['"]?([^'"]+?)['"]?\)/g;
+
+	        return {
+	            inlineAll: inlineAll,
+	            shouldProcess: shouldProcess,
+	            impl: {
+	                readUrls: readUrls,
+	                inline: inline
+	            }
+	        };
+
+	        function shouldProcess(string) {
+	            return string.search(URL_REGEX) !== -1;
+	        }
+
+	        function readUrls(string) {
+	            var result = [];
+	            var match;
+	            while ((match = URL_REGEX.exec(string)) !== null) {
+	                result.push(match[1]);
+	            }
+	            return result.filter(function (url) {
+	                return !util.isDataUrl(url);
+	            });
+	        }
+
+	        function inline(string, url, baseUrl, get) {
+	            return Promise.resolve(url)
+	                .then(function (url) {
+	                    return baseUrl ? util.resolveUrl(url, baseUrl) : url;
+	                })
+	                .then(get || util.getAndEncode)
+	                .then(function (data) {
+	                    return util.dataAsUrl(data, util.mimeType(url));
+	                })
+	                .then(function (dataUrl) {
+	                    return string.replace(urlAsRegex(url), '$1' + dataUrl + '$3');
+	                });
+
+	            function urlAsRegex(url) {
+	                return new RegExp('(url\\([\'"]?)(' + util.escape(url) + ')([\'"]?\\))', 'g');
+	            }
+	        }
+
+	        function inlineAll(string, baseUrl, get) {
+	            if (nothingToInline()) return Promise.resolve(string);
+
+	            return Promise.resolve(string)
+	                .then(readUrls)
+	                .then(function (urls) {
+	                    var done = Promise.resolve(string);
+	                    urls.forEach(function (url) {
+	                        done = done.then(function (string) {
+	                            return inline(string, url, baseUrl, get);
+	                        });
+	                    });
+	                    return done;
+	                });
+
+	            function nothingToInline() {
+	                return !shouldProcess(string);
+	            }
+	        }
+	    }
+
+	    function newFontFaces() {
+	        return {
+	            resolveAll: resolveAll,
+	            impl: {
+	                readAll: readAll
+	            }
+	        };
+
+	        function resolveAll() {
+	            return readAll(document)
+	                .then(function (webFonts) {
+	                    return Promise.all(
+	                        webFonts.map(function (webFont) {
+	                            return webFont.resolve();
+	                        })
+	                    );
+	                })
+	                .then(function (cssStrings) {
+	                    return cssStrings.join('\n');
+	                });
+	        }
+
+	        function readAll() {
+	            return Promise.resolve(util.asArray(document.styleSheets))
+	                .then(getCssRules)
+	                .then(selectWebFontRules)
+	                .then(function (rules) {
+	                    return rules.map(newWebFont);
+	                });
+
+	            function selectWebFontRules(cssRules) {
+	                return cssRules
+	                    .filter(function (rule) {
+	                        return rule.type === CSSRule.FONT_FACE_RULE;
+	                    })
+	                    .filter(function (rule) {
+	                        return inliner.shouldProcess(rule.style.getPropertyValue('src'));
+	                    });
+	            }
+
+	            function getCssRules(styleSheets) {
+	                var cssRules = [];
+	                styleSheets.forEach(function (sheet) {
+	                    try {
+	                        util.asArray(sheet.cssRules || []).forEach(cssRules.push.bind(cssRules));
+	                    } catch (e) {
+	                        console.log('Error while reading CSS rules from ' + sheet.href, e.toString());
+	                    }
+	                });
+	                return cssRules;
+	            }
+
+	            function newWebFont(webFontRule) {
+	                return {
+	                    resolve: function resolve() {
+	                        var baseUrl = (webFontRule.parentStyleSheet || {}).href;
+	                        return inliner.inlineAll(webFontRule.cssText, baseUrl);
+	                    },
+	                    src: function () {
+	                        return webFontRule.style.getPropertyValue('src');
+	                    }
+	                };
+	            }
+	        }
+	    }
+
+	    function newImages() {
+	        return {
+	            inlineAll: inlineAll,
+	            impl: {
+	                newImage: newImage
+	            }
+	        };
+
+	        function newImage(element) {
+	            return {
+	                inline: inline
+	            };
+
+	            function inline(get) {
+	                if (util.isDataUrl(element.src)) return Promise.resolve();
+
+	                return Promise.resolve(element.src)
+	                    .then(get || util.getAndEncode)
+	                    .then(function (data) {
+	                        return util.dataAsUrl(data, util.mimeType(element.src));
+	                    })
+	                    .then(function (dataUrl) {
+	                        return new Promise(function (resolve, reject) {
+	                            element.onload = resolve;
+	                            element.onerror = reject;
+	                            element.src = dataUrl;
+	                        });
+	                    });
+	            }
+	        }
+
+	        function inlineAll(node) {
+	            if (!(node instanceof Element)) return Promise.resolve(node);
+
+	            return inlineBackground(node)
+	                .then(function () {
+	                    if (node instanceof HTMLImageElement)
+	                        return newImage(node).inline();
+	                    else
+	                        return Promise.all(
+	                            util.asArray(node.childNodes).map(function (child) {
+	                                return inlineAll(child);
+	                            })
+	                        );
+	                });
+
+	            function inlineBackground(node) {
+	                var background = node.style.getPropertyValue('background');
+
+	                if (!background) return Promise.resolve(node);
+
+	                return inliner.inlineAll(background)
+	                    .then(function (inlined) {
+	                        node.style.setProperty(
+	                            'background',
+	                            inlined,
+	                            node.style.getPropertyPriority('background')
+	                        );
+	                    })
+	                    .then(function () {
+	                        return node;
+	                    });
+	            }
+	        }
+	    }
+	})(this);
+
+
+/***/ },
+/* 490 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
+
+	var _Image = __webpack_require__(405);
+
+	var _Image2 = _interopRequireDefault(_Image);
+
+	var _ShareButton = __webpack_require__(487);
+
+	var _ShareButton2 = _interopRequireDefault(_ShareButton);
+
+	var _domToImage = __webpack_require__(489);
+
+	var _domToImage2 = _interopRequireDefault(_domToImage);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by ophelie on 18/11/2016.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+	var PivotRow = function (_React$Component) {
+	    _inherits(PivotRow, _React$Component);
+
+	    function PivotRow(props) {
+	        _classCallCheck(this, PivotRow);
+
+	        var _this = _possibleConstructorReturn(this, (PivotRow.__proto__ || Object.getPrototypeOf(PivotRow)).call(this, props));
+
+	        _this.state = { source: '', hidden: 'list-group-item pivotHidden', hiddenShare: 'pivotHidden', arrowPivot: 'fa fa-arrow-left fa-lg' };
+	        return _this;
+	    }
+
+	    _createClass(PivotRow, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'button',
+	                    { type: 'button', id: this.props.id, className: 'list-group-item', onClick: this._getHtmlTable.bind(this) },
+	                    this.props.name,
+	                    ' ',
+	                    _react2.default.createElement('i', { className: this.state.arrowPivot })
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: this.state.hidden },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: this.state.hiddenShare },
+	                        _react2.default.createElement(_ShareButton2.default, { id: this.props.id, source: this.state.source, type: 'reportTables' })
+	                    ),
+	                    _react2.default.createElement(_Image2.default, { className: 'imagePivot', src: this.state.source })
+	                )
+	            );
+	        }
+	    }, {
+	        key: '_convert',
+	        value: function _convert(node) {
+	            //var node = document.getElementById('my-table');
+	            var div = document.createElement('div');
+	            div.innerHTML = node;
+	            div.setAttribute("class", 'hiddendiv');
+	            div.setAttribute("id", this.props.id + 'm');
+	            console.log(div.firstChild);
+
+	            document.getElementById('my-table').appendChild(div);
+
+	            var d = document.getElementById(this.props.id + 'm');
+
+	            //this.setState({divhide:div.firstChild});
+
+	            //var content = document.getElementById(this.props.id + 'm');
+
+	            var self = this;
+
+	            _domToImage2.default.toPng(d).then(function (dataUrl) {
+	                var img = new Image();
+	                img.src = dataUrl;
+	                console.log(dataUrl);
+	                console.log(d);
+	                //document.body.appendChild(img);
+	                self.setState({ source: dataUrl, hiddenShare: '' });
+
+	                $('#' + self.props.id + 'm').remove();
+	            }).catch(function (error) {
+	                console.error('oops, something went wrong!', error);
+	            });
+	        }
+	    }, {
+	        key: '_getHtmlTable',
+	        value: function _getHtmlTable() {
+	            if (this.state.hidden === 'list-group-item pivotHidden') {
+	                this.setState({ hidden: 'list-group-item', arrowPivot: 'fa fa-arrow-down fa-lg' });
+
+	                console.log("ok");
+	                var username = 'admin',
+	                    password = 'district';
+	                var url = 'http://localhost:8082/api/reportTables/' + this.props.id + '/data.html';
+	                console.log(url);
+	                var self = this;
+	                $.ajax({
+	                    url: url,
+	                    type: 'GET',
+	                    dataType: 'text',
+	                    headers: {
+	                        "Authorization": "Basic " + btoa(username + ":" + password)
+	                    },
+	                    success: function success(data) {
+	                        console.log("coucou");
+	                        //console.log(data);
+	                        self._convert(data);
+	                    }
+	                });
+	            } else {
+	                this.setState({ hidden: 'list-group-item pivotHidden', arrowPivot: 'fa fa-arrow-left fa-lg' });
+	            }
+	        }
+	    }]);
+
+	    return PivotRow;
+	}(_react2.default.Component);
+
+	module.exports = PivotRow;
+	;
+
+	var _temp = function () {
+	    if (typeof __REACT_HOT_LOADER__ === 'undefined') {
+	        return;
+	    }
+
+	    __REACT_HOT_LOADER__.register(PivotRow, 'PivotRow', 'C:/Users/Julien/Desktop/Open Source/Project/dhis2-live (2)/dhis-live/webapps/dhis/dhis2-message-app/app/Components/PivotRow.jsx');
+	}();
+
+	;
+
+/***/ },
+/* 491 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactBootstrap = __webpack_require__(237);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by ophelie on 21/11/2016.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+	var About = function (_React$Component) {
+	    _inherits(About, _React$Component);
+
+	    function About(props) {
+	        _classCallCheck(this, About);
+
+	        var _this = _possibleConstructorReturn(this, (About.__proto__ || Object.getPrototypeOf(About)).call(this, props));
+
+	        _this.state = {};
+	        return _this;
+	    }
+
+	    _createClass(About, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'h1',
+	                    null,
+	                    'About Dhis2 social app'
+	                ),
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    'This project is part of the course INF5750 at UiO University, 2016.'
+	                ),
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    'Developed by:'
+	                ),
+	                _react2.default.createElement(
+	                    'ul',
+	                    null,
+	                    _react2.default.createElement(
+	                        'li',
+	                        null,
+	                        'Marius Munthe-kaas'
+	                    ),
+	                    _react2.default.createElement(
+	                        'li',
+	                        null,
+	                        'Julien Vedrenne'
+	                    ),
+	                    _react2.default.createElement(
+	                        'li',
+	                        null,
+	                        'Oph\xE9lie Andr\xE9'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    'Follow us on Facebook'
+	                ),
+	                _react2.default.createElement('div', { className: 'fb-like', 'data-href': 'https://www.facebook.com/DHIS-Community-207194423062400/', 'data-layout': 'standard', 'data-action': 'like', 'data-size': 'large', 'data-show-faces': 'true', 'data-share': 'true' }),
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    'Send us a message'
+	                ),
+	                _react2.default.createElement('div', { className: 'fb-messengermessageus',
+	                    messenger_app_id: '1409544869075027',
+	                    page_id: '207194423062400',
+	                    color: 'blue',
+	                    size: 'standard' }),
+	                _react2.default.createElement('div', { className: 'fb-send', 'data-href': 'https://play.dhis2.org/demo/api/maps/ZBjCfSaLSqD/data' })
+	            );
+	        }
+	    }]);
+
+	    return About;
+	}(_react2.default.Component);
+
+	module.exports = About;
+	;
+
+	var _temp = function () {
+	    if (typeof __REACT_HOT_LOADER__ === 'undefined') {
+	        return;
+	    }
+
+	    __REACT_HOT_LOADER__.register(About, 'About', 'C:/Users/Julien/Desktop/Open Source/Project/dhis2-live (2)/dhis-live/webapps/dhis/dhis2-message-app/app/Components/About.jsx');
+	}();
+
+	;
+
+/***/ },
+/* 492 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactBootstrap = __webpack_require__(237);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -56058,64 +57335,64 @@
 	    }
 
 	    _createClass(Menu, [{
-	        key: "render",
+	        key: 'render',
 	        value: function render() {
 	            return _react2.default.createElement(
-	                "div",
-	                { id: "sidebar-wrapper" },
+	                'div',
+	                { id: 'sidebar-wrapper' },
 	                _react2.default.createElement(
-	                    "ul",
-	                    { className: "sidebar-nav" },
+	                    'ul',
+	                    { className: 'sidebar-nav' },
 	                    _react2.default.createElement(
-	                        "li",
-	                        { className: "sidebar-brand" },
+	                        'li',
+	                        { className: 'sidebar-brand' },
 	                        _react2.default.createElement(
-	                            "a",
-	                            { href: "#" },
-	                            "Share your data"
+	                            'a',
+	                            { href: '#' },
+	                            'Share your data'
 	                        )
 	                    ),
 	                    _react2.default.createElement(
-	                        "li",
+	                        'li',
 	                        null,
 	                        _react2.default.createElement(
-	                            "a",
-	                            { id: "maps", href: "#Maps", onClick: this.handleChanges.bind(this) },
-	                            "Maps"
+	                            'a',
+	                            { id: 'maps', href: '#', onClick: this.handleChanges.bind(this) },
+	                            'Maps'
 	                        )
 	                    ),
 	                    _react2.default.createElement(
-	                        "li",
+	                        'li',
 	                        null,
 	                        _react2.default.createElement(
-	                            "a",
-	                            { id: "charts", href: "#Charts", onClick: this.handleChanges.bind(this) },
-	                            "Charts"
+	                            'a',
+	                            { id: 'charts', href: '#', onClick: this.handleChanges.bind(this) },
+	                            'Charts'
 	                        )
 	                    ),
 	                    _react2.default.createElement(
-	                        "li",
+	                        'li',
 	                        null,
 	                        _react2.default.createElement(
-	                            "a",
-	                            { id: "pivots", href: "#Pivot" },
-	                            "Pivot Table"
+	                            'a',
+	                            { id: 'reportTables', href: '#', onClick: this.handleChanges.bind(this) },
+	                            'Pivot Table'
 	                        )
 	                    ),
 	                    _react2.default.createElement(
-	                        "li",
+	                        'li',
 	                        null,
 	                        _react2.default.createElement(
-	                            "a",
-	                            { href: "#About" },
-	                            "About"
+	                            'a',
+	                            { id: 'about', href: '#', onClick: this.handleChanges.bind(this) },
+	                            'About'
 	                        )
 	                    )
 	                )
 	            );
 	        }
 	    }, {
-	        key: "handleChanges",
+	        key: 'handleChanges',
 	        value: function handleChanges(ev) {
 	            console.log(ev.target.id);
 	            this.props.onChange(ev.target.id);
@@ -56133,13 +57410,13 @@
 	        return;
 	    }
 
-	    __REACT_HOT_LOADER__.register(Menu, "Menu", "C:/Users/Julien/Desktop/Open Source/Project/dhis2-live (2)/dhis-live/webapps/dhis/dhis2-message-app/app/Components/Menu.jsx");
+	    __REACT_HOT_LOADER__.register(Menu, 'Menu', 'C:/Users/Julien/Desktop/Open Source/Project/dhis2-live (2)/dhis-live/webapps/dhis/dhis2-message-app/app/Components/Menu.jsx');
 	}();
 
 	;
 
 /***/ },
-/* 490 */
+/* 493 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";

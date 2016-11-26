@@ -11,7 +11,7 @@ import $ from 'jquery';
 class ShareButton extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { showModal: false, show: false, comment: 'Your comment', social:'fb'};
+        this.state = { showModal: false, show: false, comment: '', social:'fb',disabled:"disabled",nodisplay:"",maxlength:0,text:""};
     }
 
 
@@ -22,7 +22,13 @@ class ShareButton extends React.Component {
             container: this,
         };
 
-        var source = 'http://localhost:8082/api/'+this.props.type+'/'+this.props.id+'/data';
+        if (this.props.type == "reportTables")
+        {
+            var source = this.props.source;
+
+        }else {
+            var source = 'http://localhost:8082/api/' + this.props.type + '/' + this.props.id + '/data';
+        }
 
         return (
             <div className="containerButton">
@@ -41,38 +47,66 @@ class ShareButton extends React.Component {
                         <Modal.Title>Share your content</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
+
                         <Row>
-                            <Images onLoad={this._hideLoading} id="sharedImgModal" src={source} rounded />
                             <div id="loading">
-                                <img id="loader" src="src/loading1.gif"/>
+                                <img  id="loader" className={this.state.nodisplay}  src="src/loading1.gif"/>
                             </div>
+                            <Images onLoad={this._hideLoading.bind(this)} id="sharedImgModal" src={source} rounded />
+
                         </Row>
 
-                        <div id="modalQuestion">Add your comment:</div>
+                        <div id="modalQuestion">{this.state.text}</div>
                         <Row bsClass="text-center">
                             <form>
-                                <textarea className="form-control" rows="3" value={this.state.comment} onChange={this._handle_comment_change.bind(this)}/>
+                                <textarea className="form-control" placeholder="Enter your comment here... " rows="3"  maxLength={this.state.maxlength} value={this.state.comment} onChange={this._handle_comment_change.bind(this)}/>
                             </form>
                         </Row>
 
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this._close.bind(this)}>Cancel</Button>
-                        <Button onClick={this._confirm_publish.bind(this)}>Publish</Button>
+                        <Button id="publish" onClick={this._confirm_publish.bind(this)} disabled={this.state.disabled}>Publish</Button>
                     </Modal.Footer>
                 </Modal>
 
             </div>
+
         );
+    }
+
+    componentDidUpdate(prevProps, prevState){
+
+        console.log(prevState.showModal);
+
+        if( prevState.showModal == false && this.state.showModal ==true && this.state.type != "reportTables") {
+            var $image = $('#sharedImgModal');
+
+
+            if ($image[0].complete) {
+                this._hideLoading();
+            }
+        }
+
     }
     _close(){
         this.setState({ showModal: false});
     }
     _open(social){
         //close tooltip
+        if(social == 'fb'){
+            this.setState({ maxlength:1000 , text:"Enter Your comment" });
+        }
+        if(social == 'tw'){
+            console.log("")
+            this.setState({ maxlength:140 , text:"Enter Your comment (Max 140 caracters)" });
+        }
         this.setState({show:false});
-        console.log(social);
         this.setState({ showModal: true, social:social });
+
+
+        console.log(social);
+
     }
     _toggle() {
         this.setState({ show: !this.state.show });
@@ -92,64 +126,76 @@ class ShareButton extends React.Component {
         }
     }
     _hideLoading(){
-        $("#loading").hide()
+        //$("#loading").hide()
+        this.setState({nodisplay:"nodisplay"});
+        this.setState({disabled:""});
+        //$("#publish").prop('disabled', false);
     }
     _uploadTwitter(){
-        const contentType = 'image/png';
-        var img = new Image();
-        img.src = "http://localhost:8082/api/" + this.props.type + "/" + this.props.id + "/data";
+
+
 
         var self = this;
 
-        console.log(img);
-        var logo = "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAKfSURBVHjabJNNSFRRGIafc+6d8Y6OM42aTmpNauRgUVBRVEwZCC6kdtGqRRBtWkWLKGgXtghaRIsK3ES0L4pKCPpZREX2oxnVlOn4V4026Tjj3HvPPS2asRp64OODw8v3cXjfTxinrlOGBHSxzgPjxW4Cqvj+j7icy8AVIAIcK5YPuAMc/9+2fxEioWz3sFoozCrloVzVrLKLtud6XQiRKKlKcrPYo8AbhEiq+Xxba2MN7dEwtqsQCExT8moszfRMNmFUWwN4uhKI/z1gHikCai6/fefaRlqiYW6+HGEunQU00cYaejbGeJacjgym0hEjGBhC66UvhIEWlbPHN6yqo7UhzLUbz9mxup65C4dInTtIxPLRd/sFW1vqaaoNoRw1DawAQhI4Awzi6fjahjD97ybAUfTuWc+Je6+5l5zmTOc6mMnydOQbm2N1sGh3AZNArwR6Pa0fRGqD5BYdvk7MEoo3sbG1npXVFsv8JtviTdAWZWjyB8pRUOkHuAqcNYEpDQOmFJ2O8iCbpyfegRSCk53rlszZFKtjYCiFqzyElAAPgQkTuGgIcfR7JkeouRYCfrw/Li1RcD38oQCW5UMvFKCqog/YYgJ9QAbHPTKbt5cnNrVy980op+uCzOVshBCYhmR4LM2+DTFG0vNgGu+BS8AjUYqyFiLp5QttBza38flnjudPPoDt/k5ulUX37g6k43JncAwjGOhH626A0oA1wEfl6UVs10q0NxK2fGQLLkJAqMLHeGaBF5++KllVYQjIF+13SkFKAi2GFN+wfMOP36ZiZqWfppogrqeZTM+jXYURtO4XN8cAp/wWvgA5YMoIWiOelPtHZ7JMZBYywm/uNSorQOvRona0/Bb+ZhcgBRQMQ14CUsAtoAoolIt/DQBMqAUSa5wR2gAAAABJRU5ErkJggg==";
+        if (this.props.type == "reportTables")
+        {
+            var image= this.props.source;
+            image = image.replace(/^data:image\/(png|jpg);base64,/, "");
 
-        img.addEventListener('load', function () {
-            var image = self._getBase64Image(img);
-            console.log("couocuocuocuc");
-            console.log(image);
-
-            // Initialize with your OAuth.io app public key
-            OAuth.initialize('SB6S4-dwB3azNlMTtoqSvhvLNv8');
+        }else {
+            var image = self._getBase64Image(document.getElementById("sharedImgModal"));
+        }
 
 
-            OAuth.popup("twitter").then(function(result) {
-                console.log(result);
-                var data = new FormData();
-                data.append('status', self.state.comment);
-                data.append('media[]', self._b64toBlob(image), 'logo.png');
+        console.log(image);
 
-                return result.post('/1.1/statuses/update_with_media.json', {
-                    data: data,
-                    cache:false,
-                    processData: false,
-                    contentType: false
-                });
-            }).done(function(data){
-                var str = JSON.stringify(data, null, 2);
-                //$('#result').html("Success\n" + str).show()
-                console.log("Success\n" + str);
-                self._close();
-            }).fail(function(e){
-                var errorTxt = JSON.stringify(e, null, 2)
-                //$('#result').html("Error\n" + errorTxt).show()
-                console.log("Error\n" + errorTxt);
+        // Initialize with your OAuth.io app public key
+        OAuth.initialize('SB6S4-dwB3azNlMTtoqSvhvLNv8');
 
+
+        OAuth.popup("twitter").then(function(result) {
+            console.log(result);
+            var data = new FormData();
+            data.append('status', self.state.comment);
+            data.append('media[]', self._b64toBlob(image), 'logo.jpg');
+
+            return result.post('/1.1/statuses/update_with_media.json', {
+                data: data,
+                cache:false,
+                processData: false,
+                contentType: false
             });
+        }).done(function(data){
+            var str = JSON.stringify(data, null, 2);
+            //$('#result').html("Success\n" + str).show()
+            console.log("Success\n" + str);
+            self._close();
+        }).fail(function(e){
+            var errorTxt = JSON.stringify(e, null, 2)
+            //$('#result').html("Error\n" + errorTxt).show()
+            console.log("Error\n" + errorTxt);
+
         });
+
     }
     _uploadFacebook(){
         const contentType = 'image/png';
-        var img = new Image();
-        img.src = "http://localhost:8082/api/" + this.props.type + "/" + this.props.id + "/data";
+
 
         var self = this;
 
-        console.log(img);
-        $("#modal1").show();
+        if (this.props.type == "reportTables")
+        {
+            var image= this.props.source;
+            image = image.replace(/^data:image\/(png|jpg);base64,/, "");
 
-        img.addEventListener('load', function () {
-            var image = self._getBase64Image(img);
+        }else {
+
+            var image = self._getBase64Image(document.getElementById("sharedImgModal"));
+        }
+
+
+
             console.log("couocuocuocuc");
             console.log(image);
             var blob = self._b64toBlob(image, contentType);
@@ -194,7 +240,7 @@ class ShareButton extends React.Component {
                     console.log(e);
                 }
             } ,  {scope: 'publish_actions,user_photos'});
-        });
+
     }
     _b64toBlob(b64Data, contentType, sliceSize) {
         //Convert base64 into blob
@@ -235,7 +281,7 @@ class ShareButton extends React.Component {
         // Firefox supports PNG and JPEG. You could check img.src to
         // guess the original format, but be aware the using "image/jpg"
         // will re-encode the image.
-        var dataURL = canvas.toDataURL("image/png");
+        var dataURL = canvas.toDataURL("image/jpg");
 
         return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
     }
