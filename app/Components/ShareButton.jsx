@@ -270,8 +270,8 @@ class ShareButton extends React.Component {
     _getBase64Image(img) {
         // Create an empty canvas element
         var canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
 
         // Copy the image contents to the canvas
         var ctx = canvas.getContext("2d");
