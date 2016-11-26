@@ -30,9 +30,9 @@ class Parent extends React.Component {
                     <Row>
                         <div id="searchDivPivot" className="col-lg-6">
                             <div className="input-group">
-                                <input type="text" className="form-control" onChange={this._sortPivot.bind(this)} placeholder="Search for..."/>
+                                <input type="text" className="form-control" onChange={this._sortSearch.bind(this)} placeholder="Search for..."/>
                                   <span className="input-group-btn">
-                                    <button className="btn btn-default" type="button" onClick={this._search.bind(this)}><i className="fa fa-search fa-lg"/></button>
+                                    <button className="btn btn-default" type="button" onClick={this._searchSetDisplay.bind(this)}><i className="fa fa-search fa-lg"/></button>
                                   </span>
                             </div>
                         </div>
@@ -53,6 +53,16 @@ class Parent extends React.Component {
                     <Row>
                         <div id="typeTitle" className="col-lg-12">
                             <h1>Favorite {self.state.type}</h1>
+                        </div>
+                    </Row>
+                    <Row>
+                        <div id="searchDivPivot" className="col-lg-6">
+                            <div className="input-group">
+                                <input type="text" className="form-control" onChange={this._sortSearch.bind(this)} placeholder="Search for..."/>
+                                <span className="input-group-btn">
+                                    <button className="btn btn-default" type="button" onClick={this._searchSetDisplay.bind(this)}><i className="fa fa-search fa-lg"/></button>
+                                  </span>
+                            </div>
                         </div>
                     </Row>
                     <div>
@@ -149,19 +159,37 @@ class Parent extends React.Component {
 
     }
 
-    _sortPivot(ev){
+    _sortSearch(ev){
         console.log(ev.target.value);
         this.setState({searchPivot:ev.target.value});
 
         var my_data = this.state.data;
         var reg = new RegExp('\\b'+ev.target.value, 'i');
         for(var i =0; i<my_data.length; i++){
-            my_data[i].visible = !(my_data[i].name.search(reg) === -1);
+            if(this.state.type==='reportTables'){
+                my_data[i].visible = !(my_data[i].name.search(reg) === -1);
+            }
+            else{
+                if (ev.target.value===''){
+                    if(i<15){
+                        my_data[i].visible = !(my_data[i].name.search(reg) === -1);
+                    }
+                    else{
+                        my_data[i].visible = false;
+                    }
+                }
+                else{
+                    my_data[i].visible = !(my_data[i].name.search(reg) === -1);
+                }
+            }
+
+
+
         }
 
         this.setState({data:my_data});
     }
-    _search(){
+    _searchSetDisplay(){
         var my_data = this.state.data;
         console.log('look');
         console.log(my_data);
@@ -172,6 +200,7 @@ class Parent extends React.Component {
 
         this.setState({data:my_data});
     }
+
 
 
 }
