@@ -48,7 +48,7 @@ class ShareButton extends React.Component {
                     </Modal.Header>
                     <Modal.Body>
 
-                        <Row>
+                        <Row bsClass="text-center">
                             <div id="loading">
                                 <img  id="loader" className={this.state.nodisplay}  src="src/loading1.gif"/>
                             </div>

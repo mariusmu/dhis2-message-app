@@ -40,7 +40,7 @@ class Widget extends React.Component {
                             <Row bsClass="text-center">
                                 <p>{this.props.name}</p>
                             </Row>
-                            <Row>
+                            <Row bsClass="text-center">
                                 <Image onLoad={this._hideLoading} id="sharedImgModal" src={this.state.source} rounded />
                                 <div id="loading">
                                     <img id="loader" src="src/loading1.gif"/>
