@@ -26922,7 +26922,7 @@
 
 	        var _this = _possibleConstructorReturn(this, (Widget.__proto__ || Object.getPrototypeOf(Widget)).call(this, props));
 
-	        _this.state = { source: '', type: _this.props.type, showModal: false, divhide: '' };
+	        _this.state = { source: '', type: _this.props.type, showModal: false, divhide: '', nodisplay: '' };
 	        return _this;
 	    }
 
@@ -26985,11 +26985,11 @@
 	                            _react2.default.createElement(
 	                                _reactBootstrap.Row,
 	                                { bsClass: 'text-center' },
-	                                _react2.default.createElement(_reactBootstrap.Image, { onLoad: this._hideLoading, id: 'sharedImgModal', src: this.state.source, rounded: true }),
+	                                _react2.default.createElement(_reactBootstrap.Image, { onLoad: this._hideLoading.bind(this), id: 'sharedImgModal', src: this.state.source, rounded: true }),
 	                                _react2.default.createElement(
 	                                    'div',
 	                                    { id: 'loading' },
-	                                    _react2.default.createElement('img', { id: 'loader', src: 'src/loading1.gif' })
+	                                    _react2.default.createElement('img', { id: 'loader', className: this.state.nodisplay, src: 'src/loading1.gif' })
 	                                )
 	                            )
 	                        ),
@@ -27018,6 +27018,16 @@
 	            this._getSource();
 	        }
 	    }, {
+	        key: 'componentDidUpdate',
+	        value: function componentDidUpdate(prevProps, prevState) {
+	            if (prevState.showModal == false && this.state.showModal == true && this.state.type != "reportTables") {
+	                var $image = $('#sharedImgModal');
+	                if ($image[0].complete) {
+	                    this._hideLoading();
+	                }
+	            }
+	        }
+	    }, {
 	        key: '_getSource',
 	        value: function _getSource() {
 	            var source = '';
@@ -27032,6 +27042,11 @@
 	        key: '_previewImage',
 	        value: function _previewImage() {
 	            this.setState({ showModal: true });
+	        }
+	    }, {
+	        key: '_hideLoading',
+	        value: function _hideLoading() {
+	            this.setState({ nodisplay: "nodisplay" });
 	        }
 	    }, {
 	        key: '_close',
@@ -45844,6 +45859,10 @@
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
+	var _domToImage = __webpack_require__(489);
+
+	var _domToImage2 = _interopRequireDefault(_domToImage);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -45862,7 +45881,7 @@
 
 	        var _this = _possibleConstructorReturn(this, (ShareButton.__proto__ || Object.getPrototypeOf(ShareButton)).call(this, props));
 
-	        _this.state = { showModal: false, show: false, comment: '', social: 'fb', disabled: "disabled", nodisplay: "", maxlength: 0, text: "" };
+	        _this.state = { source: '', showModal: false, show: false, comment: '', social: 'fb', disabled: "disabled", nodisplay: "", maxlength: 0, text: "" };
 	        return _this;
 	    }
 
@@ -45874,12 +45893,6 @@
 	                show: this.state.show,
 	                container: this
 	            };
-
-	            if (this.props.type == "reportTables") {
-	                var source = this.props.source;
-	            } else {
-	                var source = 'http://localhost:8082/api/' + this.props.type + '/' + this.props.id + '/data';
-	            }
 
 	            return _react2.default.createElement(
 	                'div',
@@ -45922,7 +45935,7 @@
 	                                { id: 'loading' },
 	                                _react2.default.createElement('img', { id: 'loader', className: this.state.nodisplay, src: 'src/loading1.gif' })
 	                            ),
-	                            _react2.default.createElement(_Image2.default, { onLoad: this._hideLoading.bind(this), id: 'sharedImgModal', src: source, rounded: true })
+	                            _react2.default.createElement(_Image2.default, { onLoad: this._hideLoading.bind(this), id: 'sharedImgModal', src: this.state.source, rounded: true })
 	                        ),
 	                        _react2.default.createElement(
 	                            'div',
@@ -45959,12 +45972,10 @@
 	    }, {
 	        key: 'componentDidUpdate',
 	        value: function componentDidUpdate(prevProps, prevState) {
-
 	            console.log(prevState.showModal);
 
 	            if (prevState.showModal == false && this.state.showModal == true && this.state.type != "reportTables") {
 	                var $image = (0, _jquery2.default)('#sharedImgModal');
-
 	                if ($image[0].complete) {
 	                    this._hideLoading();
 	                }
@@ -45978,7 +45989,27 @@
 	    }, {
 	        key: '_open',
 	        value: function _open(social) {
+
+	            var self = this;
+
 	            //close tooltip
+	            if (this.props.type === 'reportTables') {
+
+	                var d = document.getElementById(this.props.id + 'piv').firstChild;
+	                console.log(d);
+	                this.setState({ show: false });
+	                this.setState({ showModal: true, social: social });
+
+	                _domToImage2.default.toPng(d).then(function (dataUrl) {
+	                    self.setState({ source: dataUrl });
+	                }).catch(function (error) {
+	                    console.error('oops, something went wrong!', error);
+	                });
+	            } else {
+	                var source = "http://localhost:8082/api/" + this.props.type + "/" + this.props.id + "/data";
+	                this.setState({ source: source, showModal: true, social: social, show: false });
+	            }
+
 	            if (social == 'fb') {
 	                this.setState({ maxlength: 1000, text: "Enter Your comment" });
 	            }
@@ -45986,8 +46017,6 @@
 	                console.log("");
 	                this.setState({ maxlength: 140, text: "Enter Your comment (Max 140 caracters)" });
 	            }
-	            this.setState({ show: false });
-	            this.setState({ showModal: true, social: social });
 
 	            console.log(social);
 	        }
@@ -46029,7 +46058,7 @@
 	            var self = this;
 
 	            if (this.props.type == "reportTables") {
-	                var image = this.props.source;
+	                var image = this.state.source;
 	                image = image.replace(/^data:image\/(png|jpg);base64,/, "");
 	            } else {
 	                var image = self._getBase64Image(document.getElementById("sharedImgModal"));
@@ -46071,7 +46100,7 @@
 	            var self = this;
 
 	            if (this.props.type == "reportTables") {
-	                var image = this.props.source;
+	                var image = this.state.source;
 	                image = image.replace(/^data:image\/(png|jpg);base64,/, "");
 	            } else {
 
@@ -57154,17 +57183,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Image = __webpack_require__(405);
-
-	var _Image2 = _interopRequireDefault(_Image);
+	var _reactBootstrap = __webpack_require__(237);
 
 	var _ShareButton = __webpack_require__(487);
 
 	var _ShareButton2 = _interopRequireDefault(_ShareButton);
-
-	var _domToImage = __webpack_require__(489);
-
-	var _domToImage2 = _interopRequireDefault(_domToImage);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -57206,45 +57229,16 @@
 	                    { className: this.state.hidden },
 	                    _react2.default.createElement(
 	                        'div',
-	                        { className: this.state.hiddenShare },
+	                        null,
 	                        _react2.default.createElement(_ShareButton2.default, { id: this.props.id, source: this.state.source, type: 'reportTables' })
 	                    ),
-	                    _react2.default.createElement(_Image2.default, { className: 'imagePivot', src: this.state.source })
+	                    _react2.default.createElement(
+	                        _reactBootstrap.Row,
+	                        { bsClass: 'text-center' },
+	                        _react2.default.createElement('div', { id: this.props.id + 'piv', className: 'imagePlugPivot' })
+	                    )
 	                )
 	            );
-	        }
-	    }, {
-	        key: '_convert',
-	        value: function _convert(node) {
-	            //var node = document.getElementById('my-table');
-	            var div = document.createElement('div');
-	            div.innerHTML = node;
-	            div.setAttribute("class", 'hiddendiv');
-	            div.setAttribute("id", this.props.id + 'm');
-	            console.log(div.firstChild);
-
-	            document.getElementById('my-table').appendChild(div);
-
-	            var d = document.getElementById(this.props.id + 'm');
-
-	            //this.setState({divhide:div.firstChild});
-
-	            //var content = document.getElementById(this.props.id + 'm');
-
-	            var self = this;
-
-	            _domToImage2.default.toPng(d).then(function (dataUrl) {
-	                var img = new Image();
-	                img.src = dataUrl;
-	                console.log(dataUrl);
-	                console.log(d);
-	                //document.body.appendChild(img);
-	                self.setState({ source: dataUrl, hiddenShare: '' });
-
-	                $('#' + self.props.id + 'm').remove();
-	            }).catch(function (error) {
-	                console.error('oops, something went wrong!', error);
-	            });
 	        }
 	    }, {
 	        key: '_getHtmlTable',
@@ -57252,25 +57246,15 @@
 	            if (this.state.hidden === 'list-group-item pivotHidden') {
 	                this.setState({ hidden: 'list-group-item', arrowPivot: 'fa fa-arrow-down fa-lg' });
 
-	                console.log("ok");
-	                var username = 'admin',
-	                    password = 'district';
-	                var url = 'http://localhost:8082/api/reportTables/' + this.props.id + '/data.html';
-	                console.log(url);
-	                var self = this;
-	                $.ajax({
-	                    url: url,
-	                    type: 'GET',
-	                    dataType: 'text',
-	                    headers: {
-	                        "Authorization": "Basic " + btoa(username + ":" + password)
-	                    },
-	                    success: function success(data) {
-	                        console.log("coucou");
-	                        //console.log(data);
-	                        self._convert(data);
-	                    }
-	                });
+	                reportTablePlugin.url = "http://localhost:8082";
+	                reportTablePlugin.username = "admin";
+	                reportTablePlugin.password = "district";
+	                reportTablePlugin.loadingIndicator = true;
+	                var injectId = this.props.id + 'piv';
+	                console.log(injectId);
+	                var r1 = { el: injectId, id: this.props.id };
+
+	                reportTablePlugin.load([r1]);
 	            } else {
 	                this.setState({ hidden: 'list-group-item pivotHidden', arrowPivot: 'fa fa-arrow-left fa-lg' });
 	            }

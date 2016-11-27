@@ -151,7 +151,7 @@ class ShareButton extends React.Component {
 
         if (this.props.type == "reportTables")
         {
-            var image= this.props.source;
+            var image= this.state.source;
             image = image.replace(/^data:image\/(png|jpg);base64,/, "");
 
         }else {
@@ -199,7 +199,7 @@ class ShareButton extends React.Component {
 
         if (this.props.type == "reportTables")
         {
-            var image= this.props.source;
+            var image= this.state.source;
             image = image.replace(/^data:image\/(png|jpg);base64,/, "");
 
         }else {
