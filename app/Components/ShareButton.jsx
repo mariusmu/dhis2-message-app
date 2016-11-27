@@ -147,6 +147,7 @@ class ShareButton extends React.Component {
         }
 
 
+
         console.log(image);
 
         // Initialize with your OAuth.io app public key
