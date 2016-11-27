@@ -2,7 +2,7 @@ import ApiService from '../Services/ApiService';
 import UrlConstants from '../Constants/UrlConstants';
 import ActionConstants from '../Constants/ActionConstants';
 
-const token = "ecf5ab14-743f-4b93-a2c8-f0887b67fa11";
+const token = null;
 
 /**
  * Fetch all user that the local user can see
@@ -19,7 +19,7 @@ export const fetchAllUsers = () => dispatch => {
                         users: parsedBody.users,
                         pager: parsedBody.pager
                     }
-                )})
+                ); });
         })
         .catch(err => {
             dispatch({

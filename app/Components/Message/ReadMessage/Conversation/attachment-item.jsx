@@ -1,7 +1,7 @@
-import React from 'react';
-import { readFile } from '../../../../Actions/file.action';
-import FileSaver from 'filesaverjs';
-import ImageAttachment from './image-attachment';
+import React from "react";
+import { readFile } from "../../../../Actions/file.action";
+import FileSaver from "filesaverjs";
+import ImageAttachment from "./image-attachment";
 
 /**
  * Attachment item component that decides if to print 

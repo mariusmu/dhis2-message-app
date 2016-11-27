@@ -1,11 +1,6 @@
-import ApiService from '../Services/ApiService';
-import SecretConstants from '../Constants/SecretConstants';
-import UrlConstants from '../Constants/UrlConstants';
-import ActionConstants from '../Constants/ActionConstants';
-import async from 'async';
-import Dropbox from 'dropbox';
-import uuid from 'uuid';
-import fs from 'fs';
+import ApiService from "../Services/ApiService";
+import SecretConstants from "../Constants/SecretConstants";
+import UrlConstants from "../Constants/UrlConstants";
 
 /**
  * Upload a file to the webserver
@@ -21,10 +16,10 @@ export const uploadFile = (files) => {
         xhr.onload = (res) => {
             if(res.target.status != 201) reject(xhr.responseText);
             resolve(JSON.parse(xhr.responseText)); 
-        }
+        };
         xhr.onerror = function(err) {
-           reject(err);
-        }
+            reject(err);
+        };
         
         xhr.send(formData);
     });
@@ -42,7 +37,7 @@ export const deleteFile = (path) => {
     //const form = "root=sandbox&path="+parentPath;
     //return ApiService.authenticatedFormPost(form, UrlConstants.DROPBOX_DELETE_FILE, SecretConstants.DROPBOX_ACCESS_TOKEN);
     return ApiService.unauthenticatedDelete(UrlConstants.FILE_SERVER + "file/delete/" + path);
-}
+};
 
 /**
  * Fetch a file from the webserver
@@ -55,8 +50,8 @@ export const readFile = (path) => {
         .then(res => {
             res.blob()
                 .then(textRes => resolve(textRes))
-                .catch(err => reject(err))
+                .catch(err => reject(err));
         })
         .catch(err => reject(err));
     });
-}
+};

@@ -1,5 +1,5 @@
-import React from 'react';
-import MultiPart from '../../Attachment/multi-part';
+import React from "react";
+import MultiPart from "../../Attachment/multi-part";
 
 /**
  * Write response component to use in the message display
@@ -87,7 +87,7 @@ class WriteResponseForm extends React.Component {
                     
                 </div>
             </div>
-        )
+        );
     }
 }
 

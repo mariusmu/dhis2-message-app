@@ -1,9 +1,9 @@
-import React from 'react';
-import { postConversation, fetchAllConversations, unSelectMessage } from '../../../Actions/message.action';
-import Conversation from './Conversation/conversation';
-import NameLink from './name-link';
-import WriteResponse from './Conversation/write-response';
-import { fetchAllUsers } from '../../../Actions/user.action';
+import React from "react";
+import { postConversation, fetchAllConversations, unSelectMessage } from "../../../Actions/message.action";
+import Conversation from "./Conversation/conversation";
+import NameLink from "./name-link";
+import WriteResponse from "./Conversation/write-response";
+import { fetchAllUsers } from "../../../Actions/user.action";
 
 
 class ReadMessage extends React.Component {
@@ -40,7 +40,6 @@ class ReadMessage extends React.Component {
      * @param internal whether this is an internal reply
      */
     reply(message, internal, attachments) {
-        console.log(this.props.message);
         postConversation(this.props.message.id, message, internal, attachments)(this.props.dispatch)
             .then(() =>
                 fetchAllConversations(this.props.message.id)(this.props.dispatch)
@@ -76,7 +75,7 @@ class ReadMessage extends React.Component {
                     {conversations}
                 <WriteResponse shouldRefresh={true} allowInternalReply={true} replyAction={this.reply} />
             </div>
-        )
+        );
     }
 
     goBack() {

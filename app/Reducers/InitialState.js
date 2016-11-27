@@ -9,4 +9,4 @@ module.exports = {
         selected_message: null,
         conversation_post_error : {}
     }
-}
+};

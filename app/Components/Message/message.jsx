@@ -1,10 +1,10 @@
-import React from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {fetchOneMessage, selectMessage} from '../../Actions/message.action';
-import {fetchAllUsers} from '../../Actions/user.action';
-import ErrorDisplay from '../Common/error-display';
-import ReadMessage from './ReadMessage/read-message';
+import React from "react";
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import {fetchOneMessage} from "../../Actions/message.action";
+import {fetchAllUsers} from "../../Actions/user.action";
+import ErrorDisplay from "../Common/error-display";
+import ReadMessage from "./ReadMessage/read-message";
 
 /**
  * Message wrapper component
@@ -13,7 +13,7 @@ import ReadMessage from './ReadMessage/read-message';
 class Message extends React.Component {
     
     constructor() {
-        super();
+        super();  
         this.state = {};
         this.state.selectedMessage = null;
         this.state.messageFetched = "aqvFxkI4BZj";
@@ -36,15 +36,15 @@ class Message extends React.Component {
      * when component load
      */
     componentDidMount() {
-       const id = this.findId(window.location.href);
-       if(id) {
+        const id = this.findId(window.location.href);
+        if(id) {
             fetchOneMessage(id)(this.props.dispatch);
-       } else {
-           console.log("Cannot fetch the DHIS2 message. No id found");
-           return;
-       }
-       
-       fetchAllUsers()(this.props.dispatch);
+        } else {
+            console.log("Cannot fetch the DHIS2 message. No id found");
+            return;
+        }
+        
+        fetchAllUsers()(this.props.dispatch);
     }
 
     render() {
@@ -52,14 +52,14 @@ class Message extends React.Component {
         {
             this.props.messages_error.forEach((val, id) => {
                 errorComponents.push(<ErrorDisplay error={val} key={id + "err"}/>);
-            }
-        )};
+            });
+        }
 
         return (
             this.props.messages.length > 0 ?
             <ReadMessage message={this.props.messages[0]} users={this.props.users} dispatch={this.props.dispatch}/>
             : <h1>Loading</h1>
-        )
+        );
     }
 }
 
@@ -69,7 +69,7 @@ class Message extends React.Component {
  * @param{Object} state the state from the store
  * @param{Object} ownprops the local properties of this component
  */
-function mapStateToProps(state, ownprops) {
+function mapStateToProps(state) {
     return {
         messages: state.messages.messages,
         messages_error: state.messages.messages_error,
