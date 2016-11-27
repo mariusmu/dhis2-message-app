@@ -11,7 +11,7 @@ import domtoimage from 'dom-to-image';
 class Widget extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { source:'',type:this.props.type, showModal: false,divhide:''};
+        this.state = { source:'',type:this.props.type, showModal: false,divhide:'',nodisplay:''};
     }
 
 
@@ -41,9 +41,9 @@ class Widget extends React.Component {
                                 <p>{this.props.name}</p>
                             </Row>
                             <Row bsClass="text-center">
-                                <Image onLoad={this._hideLoading} id="sharedImgModal" src={this.state.source} rounded />
+                                <Image onLoad={this._hideLoading.bind(this)} id="sharedImgModal" src={this.state.source} rounded />
                                 <div id="loading">
-                                    <img id="loader" src="src/loading1.gif"/>
+                                    <img  id="loader" className={this.state.nodisplay}  src="src/loading1.gif"/>
                                 </div>
                             </Row>
                         </Modal.Body>
@@ -62,6 +62,14 @@ class Widget extends React.Component {
         this.setState({type:nextProps.type});
         this._getSource();
     }
+    componentDidUpdate(prevProps, prevState){
+        if( prevState.showModal == false && this.state.showModal ==true && this.state.type != "reportTables") {
+            var $image = $('#sharedImgModal');
+            if ($image[0].complete) {
+                this._hideLoading();
+            }
+        }
+    }
     _getSource(){
         var source = '';
         if(this.state.type==='reportTables'){
@@ -74,6 +82,9 @@ class Widget extends React.Component {
     }
     _previewImage(){
         this.setState({showModal: true});
+    }
+    _hideLoading(){
+        this.setState({nodisplay:"nodisplay"});
     }
     _close(){
         this.setState({ showModal: false});

@@ -4,6 +4,7 @@
 
 import React from 'react';
 import Image_boot from 'react-bootstrap/lib/Image';
+import {Row} from 'react-bootstrap';
 import ShareButton from './ShareButton';
 import domtoimage from 'dom-to-image';
 
@@ -12,7 +13,7 @@ import domtoimage from 'dom-to-image';
 class PivotRow extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {source:'',hidden:'list-group-item pivotHidden',hiddenShare:'pivotHidden',arrowPivot:'fa fa-arrow-left fa-lg'};
+        this.state = {source:'',hidden:'list-group-item pivotHidden',hiddenShare:'pivotHidden',arrowPivot:'fa fa-arrow-left fa-lg',nodisplay:""};
     }
     render(){
         return(
@@ -24,7 +25,13 @@ class PivotRow extends React.Component {
                     <div className={this.state.hiddenShare}>
                         <ShareButton id={this.props.id} source={this.state.source} type="reportTables"/>
                     </div>
-                    <Image_boot className='imagePivot' src={this.state.source}/>
+                    <Row bsClass="text-center">
+                        <div id="loading">
+                            <img  id="loader" className={this.state.nodisplay}  src="src/loading1.gif"/>
+                        </div>
+                        <Image_boot onLoad={this._hideLoading.bind(this)} className='imagePivot' src={this.state.source}/>
+                    </Row>
+
                 </div>
             </div>
 
@@ -94,6 +101,9 @@ class PivotRow extends React.Component {
         }
 
 
+    }
+    _hideLoading(){
+        this.setState({nodisplay:"nodisplay"});
     }
 
 }

@@ -76,18 +76,14 @@ class ShareButton extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState){
-
         console.log(prevState.showModal);
 
         if( prevState.showModal == false && this.state.showModal ==true && this.state.type != "reportTables") {
             var $image = $('#sharedImgModal');
-
-
             if ($image[0].complete) {
                 this._hideLoading();
             }
         }
-
     }
     _close(){
         this.setState({ showModal: false});
