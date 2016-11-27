@@ -1,0 +1,227 @@
+body {
+    background: white;
+}
+
+.test {
+  color: green;   
+}
+
+
+button {
+  padding-bottom: 25px !important;
+}
+
+.response-write {
+  margin-top: 20px;
+  margin-left: 20px;
+  width: 640px;
+
+
+}
+
+
+button {
+margin-top: 20px;
+padding-bottom: 25px !important;
+}
+.spinround {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #3581CE;
+  opacity: 0.6;
+  margin-top: 20px;
+  -webkit-animation: bounce 0s infinite ease-in-out;
+  animation: bounce 1.5s infinite ease-in-out;
+}
+
+@-webkit-keyframes bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 50% {
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}
+
+.greyButtonLink {
+    padding: 6px 12px;
+    height: 25px;
+    border: 1px solid #bbb;
+    border-radius: 3px;
+    margin-right: 4px;
+    font-weight: bold;
+    font-size: 13px;
+    background-color: #f3f3f3;
+    color: #606060 !important;
+    text-decoration: none !important;
+}
+
+.message-select {
+    width: 150px;
+    display: inline-block;
+    padding: 4px 6px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #333;
+    vertical-align: middle;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    height: 29px;
+    line-height: 29px;
+    position: relative;
+    bottom: 6px;
+    margin-right: 4px;
+    background-color: #eee;
+    border: solid 1px #aaa;
+}
+
+.messageTopDiv {
+    width: 700px;
+    border-bottom: 1px solid #cccccc;
+    padding-top: 10px;
+    padding-bottom: 35px;
+    font-family: LiberationSans, arial, sans-serif;
+    line-height: 140%;
+}
+
+.horizontalMenu ul {
+    list-style-type: none;
+    list-style: none;
+    margin: 0;
+}
+
+.horizontalMenu li {
+    list-style: none;
+    list-style-type: none;
+    margin: 0;
+}
+
+.messageDiv {
+    width: 660px;
+    border-bottom: 1px solid #cccccc;
+    padding-left: 40px;
+    padding-top: 16px;
+    padding-bottom: 22px;
+    font-family: LiberationSans, arial, sans-serif;
+    line-height: 140%;
+}
+
+.messageText {
+    padding: 8px 0;
+    font-family: LiberationSans, arial, sans-serif;
+    line-height: 140%;
+}
+
+.userLink {
+    font-size: 10pt;
+    font-weight: bold;
+    text-decoration: none;
+    color: #3162C5;
+    font-family: LiberationSans, arial, sans-serif;
+    line-height: 140%;
+    float: left;
+    margin-right: 20px;
+}
+
+a {
+    text-decoration: none;
+    color: #3162C5;
+}
+
+
+.recipientsDiv {
+    width: 660px;
+    padding-left: 40px;
+    color: #777;
+    font-weight: normal;
+    font-family: LiberationSans, arial, sans-serif;
+    line-height: 140%;
+    margin-top: 30px;
+}
+
+.to-desc {
+    float: left;
+    margin-right: 20px;
+    font-family: LiberationSans, arial, sans-serif;
+}
+
+
+h3 {
+    font-size: 14pt;
+      padding-left: 40px;
+    font-weight: normal;
+    color: #585D61;
+    font-family: LiberationSans, arial, sans-serif;
+    line-height: 140%;
+}
+
+.blueButtonLink {
+    padding: 6px 12px;
+    height: 25px;
+    border: 1px solid #3281D1;
+    border-radius: 3px;
+    margin-right: 4px;
+    font-weight: bold;
+    font-size: 13px;
+    background-color: #3581CE;
+    color: #fff !important;
+    text-decoration: none !important;
+}
+
+.internalMessageButtonLink {
+    padding: 6px 12px;
+    height: 25px;
+    border: 1px solid #bbb;
+    border-radius: 3px;
+    margin-right: 4px;
+    font-weight: bold;
+    font-size: 13px;
+    color: #333 !important;
+    text-decoration: none !important;
+}
+
+.attachments {
+    list-style: none;
+    margin-top: 30px;
+    margin-left: 0px;
+    padding-left: 0px;
+}
+
+.attachment-item {
+    border: 3px dotted #3581CE;
+    padding: 12px;
+    display: inline-block;
+    border-radius: 12px;
+}
+
+
+.error-fetch {
+  padding: 5px 12px;
+  color: white;
+  font-size: 10px;
+  background: lightcoral;
+}
+
+.error-upload {
+    padding: 5px 12px;
+    margin-top: -20px;
+    color: white;
+    font-size: 12px;
+    background: lightcoral;
+}
+
+.top-error {
+    padding: 5px 12px;
+    color: white;
+    font-size: 12px;
+    background: lightcoral;
+}
+
