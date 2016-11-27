@@ -1,6 +1,4 @@
-//import req from 'request-promise';
-import cookie from 'react-cookie';
-import 'whatwg-fetch'
+import "whatwg-fetch";
 
 class ApiService {
     
@@ -12,16 +10,16 @@ class ApiService {
      */
     createOptions(uri, method, json) {
         
-        const contentType = json === true ? 'application/json' : 'application/x-www-form-urlencoded'
+        const contentType = json === true ? "application/json" : "application/x-www-form-urlencoded"
         return {
-            credentials: 'same-origin',
+            credentials: "same-origin",
             method: method,
             uri: uri,
             headers: {
                 "Content-Type" : contentType
             },
             json: json
-        }
+        };
     }
 
 
@@ -40,7 +38,7 @@ class ApiService {
             options.headers.Authorization = "Bearer " + token;
         }
         return fetch(uri, options);
-    };
+    }
 
     /**
      * POST to Api as an authenticated client
@@ -73,7 +71,7 @@ class ApiService {
             delete options.credentials;
             options.headers.Authorization = "Bearer " + token;
         }
-        options.headers['Content-Type'] = "multipart/form-data;boundary=--file"
+        options.headers["Content-Type"] = "multipart/form-data;boundary=--file";
         options.form = { file : file};
         
         return fetch(uri, options);
