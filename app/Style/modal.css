@@ -72,6 +72,23 @@
 
 #overload-bottom{
     margin-top: 32px;
+    top: -10px !important;
+    left: -30px !important;
+}
+
+.list-group-item>div>div>div>#overload-bottom{
+    top: -10px !important;
+    right: 10px !important;
+}
+
+.list-group-item>div>div>div>div>.tooltip-arrow{
+    position: absolute;
+    left: 99% !important;
+}
+
+.list-group-item>div>div>div>div>.tooltip-inner{
+    position: absolute;
+    right: 0 !important;
 }
 
 #btnShare{
