@@ -1,6 +1,5 @@
-import React from 'react';
-import {fetchAllConversations, unSelectMessage} from '../../../../Actions/message.action';
-import Attachment from './attachment-item';
+import React from "react";
+import Attachment from "./attachment-item";
 
 /**
  * Conversation component to display 
@@ -13,7 +12,6 @@ class Conversation extends React.Component {
         this.state = {};
         this.state.attachments = [];
         this.state.text = "";
-
     }
 
     /**
@@ -68,7 +66,7 @@ class Conversation extends React.Component {
         return(
             <div className="messageDiv">
                 <div className="userLink">
-                    {this.generateUser().displayName}
+                    <a href={"profile.action?id=" + this.generateUser().id}>{this.generateUser().displayName}</a>
                 </div>
                 <div className="grey">
                     {this.props.conversation.lastUpdated.substr(0, 10)}
