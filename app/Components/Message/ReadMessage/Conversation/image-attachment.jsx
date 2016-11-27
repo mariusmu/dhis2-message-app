@@ -10,7 +10,16 @@ class ImageAttachment extends React.Component {
         super(props);
         this.state = {};
         this.state.activeComponent = <Waiting/>
-        
+
+        readFile(this.props.image.path_display)
+            .then(res => {
+                let makeUrlFromBlob = window.URL || window.webkitURL;
+                let imageUrl = makeUrlFromBlob.createObjectURL(res);
+                this.setState({activeComponent: this.makeImageComponent(imageUrl)}); })
+            .catch(err => {
+                this.setState({activeComponent: <img src=""/>});
+            });
+        }
         /**
          * Make the image component 
          * @param{String} imageUrl the url of the image
@@ -23,17 +32,7 @@ class ImageAttachment extends React.Component {
                 </a>
             );
         }
-
-        readFile(this.props.image.path_display)
-            .then(res => {
-                let makeUrlFromBlob = window.URL || window.webkitURL;
-                let imageUrl = makeUrlFromBlob.createObjectURL(res);
-                this.setState({activeComponent: this.makeImageComponent(imageUrl)}); })
-            .catch(err => {
-                this.setState({activeComponent: <img src=""/>});
-            });
-            
-    }
+        
     
     render() {
         return(this.state.activeComponent);
