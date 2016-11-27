@@ -1,7 +1,7 @@
-import React from 'react';
-import {uploadFile, deleteFile} from '../../../Actions/file.action';
-import AttachmentItemElement from './attachment-item-element'; 
-import Waiting from '../../Common/Waiting';
+import React from "react";
+import {uploadFile, deleteFile} from "../../../Actions/file.action";
+import AttachmentItemElement from "./attachment-item-element"; 
+import Waiting from "../../Common/Waiting";
 
 class MultiPart extends React.Component {
     constructor(props) {
@@ -14,24 +14,24 @@ class MultiPart extends React.Component {
         this.deleteItem = this.deleteItem.bind(this);
         this.updateParent = this.updateParent.bind(this);
         this.cleanState = this.cleanState.bind(this);
+        this.state.error = false;
     }
 
     inputChanged(e) {
         this.setState({waiting: true});
-         uploadFile(e.target.files[0])
+        uploadFile(e.target.files[0])
             .then(res => {
                 if(res) {
                     let filesUploaded = this.props.filesUploaded.concat(res);
                     this.cleanState();
                     this.updateParent(filesUploaded);
                     
-                } else {
-                }
-                this.setState({waiting: false});
+                } 
+                this.setState({error: false, waiting: false});
             })
-            .catch(err => {
-                this.setState({waiting: false});
-            });
+            .catch((err) => 
+                this.setState({error: true, waiting: false})
+            );
         
     }
 
@@ -67,7 +67,7 @@ class MultiPart extends React.Component {
         const self = this;
         if(foundId > -1) {
             deleteFile(filesUploaded[foundId].id)
-                .then(res => {
+                .then(() => {
                     filesUploaded.splice(foundId, 1);
                     if(filesUploaded == null) filesUploaded = [];
                     self.updateParent(filesUploaded);
@@ -92,6 +92,10 @@ class MultiPart extends React.Component {
             <ul className="attachments">
                 {uploaded}
             </ul>
+            {this.state.error === true ? <div className="error-upload">
+                <span className="glyphicon glyphicon-alert">
+                </span>&emsp;Error when trying to upload you attachment
+                </div> : <div></div>}
         </form>
         </div>);
     }
