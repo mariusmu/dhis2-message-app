@@ -14,12 +14,14 @@ Add support for embedding images and files onto messages sent by users.
 # Current status
 - Everything is completely implemented is working.
 - Testing needs to be done
+
 # To run
 
 ## Technologies you will need
 - NodeJS
 
 ## Steps
+0. Generate an access token and add it to app/Actions/message.action and user.action
 1. First rename app/Constants/SecretConstants_base.js to SecretConstants.js
 2. Add the neccessary values to the SecretConstant.js file
 3. run  ``` npm install ```
@@ -27,3 +29,8 @@ Add support for embedding images and files onto messages sent by users.
 
 # To build
 ```npm run build```
+
+## Important!
+If you were to add this to the dhis2 dashboard, then you will need to change some .vm files
+on DHIS2. Please replace the files dhis-live\webapps\dhis\dhis-web-dashboard-integration\ with
+the vm files in the folder "DHIS2-dashboard-changes"
