@@ -6,12 +6,13 @@ import React from 'react';
 import { Button, Modal, Row, Tooltip, Overlay, FormControl } from 'react-bootstrap';
 import Images from 'react-bootstrap/lib/Image';
 import $ from 'jquery';
+import domtoimage from 'dom-to-image';
 
 
 class ShareButton extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { showModal: false, show: false, comment: '', social:'fb',disabled:"disabled",nodisplay:"",maxlength:0,text:""};
+        this.state = { source:'',showModal: false, show: false, comment: '', social:'fb',disabled:"disabled",nodisplay:"",maxlength:0,text:""};
     }
 
 
@@ -21,14 +22,6 @@ class ShareButton extends React.Component {
             show: this.state.show,
             container: this,
         };
-
-        if (this.props.type == "reportTables")
-        {
-            var source = this.props.source;
-
-        }else {
-            var source = 'http://localhost:8082/api/' + this.props.type + '/' + this.props.id + '/data';
-        }
 
         return (
             <div className="containerButton">
@@ -52,7 +45,7 @@ class ShareButton extends React.Component {
                             <div id="loading">
                                 <img  id="loader" className={this.state.nodisplay}  src="src/loading1.gif"/>
                             </div>
-                            <Images onLoad={this._hideLoading.bind(this)} id="sharedImgModal" src={source} rounded />
+                            <Images onLoad={this._hideLoading.bind(this)} id="sharedImgModal" src={this.state.source} rounded />
 
                         </Row>
 
@@ -89,7 +82,32 @@ class ShareButton extends React.Component {
         this.setState({ showModal: false});
     }
     _open(social){
+
+        var self = this;
+
         //close tooltip
+        if(this.props.type==='reportTables') {
+
+            var d = document.getElementById(this.props.id+'piv').firstChild;
+            console.log(d);
+            this.setState({show:false});
+            this.setState({ showModal: true, social:social });
+
+            domtoimage.toPng(d).
+                then(function (dataUrl) {
+                    self.setState({source: dataUrl});
+                })
+                .catch(function (error) {
+                    console.error('oops, something went wrong!', error);
+                });
+
+
+        }
+        else{
+            var source = "http://localhost:8082/api/" + this.props.type + "/" + this.props.id + "/data";
+            this.setState({source:source, showModal: true, social:social,show:false });
+        }
+
         if(social == 'fb'){
             this.setState({ maxlength:1000 , text:"Enter Your comment" });
         }
@@ -97,8 +115,6 @@ class ShareButton extends React.Component {
             console.log("")
             this.setState({ maxlength:140 , text:"Enter Your comment (Max 140 caracters)" });
         }
-        this.setState({show:false});
-        this.setState({ showModal: true, social:social });
 
 
         console.log(social);

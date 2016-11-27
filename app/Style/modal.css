@@ -8,6 +8,12 @@
     z-index: 20 !important;
 }
 
+.imagePlugPivot{
+    overflow:scroll;
+    width:100%;
+    border: lightgray 1px solid;
+}
+
 .imagePivot{
     width: 60%;
 }
