@@ -1,11 +1,9 @@
-import ApiService from '../Services/ApiService';
-import SecretConstants from '../Constants/SecretConstants';
-import UrlConstants from '../Constants/UrlConstants';
-import ActionConstants from '../Constants/ActionConstants';
-import async from 'async';
+import ApiService from "../Services/ApiService";
+import UrlConstants from "../Constants/UrlConstants";
+import ActionConstants from "../Constants/ActionConstants";
 
 
-const token = "ecf5ab14-743f-4b93-a2c8-f0887b67fa11";
+const token = null;
 
 /**
  * Fetch a message
@@ -27,8 +25,8 @@ export const fetchOneMessage = (messageId) => dispatch => {
             });
         })
         .catch(err => dispatch({
-                type: ActionConstants.FETCH_ONE_MESSAGE_ERROR,
-                error: err
+            type: ActionConstants.FETCH_ONE_MESSAGE_ERROR,
+            error: err
         }));
 };
 
@@ -50,13 +48,13 @@ export const fetchAllMessages = () => dispatch => {
                     });
 
                 return null;
-            })
+            });
         })
         .catch(err => dispatch({
-                type: ActionConstants.FETCH_MESSAGES_ERROR,
-                error: err
+            type: ActionConstants.FETCH_MESSAGES_ERROR,
+            error: err
         }));
-}
+};
 
 /**
  * Fetch all conversations for a message
@@ -77,13 +75,13 @@ export const fetchAllConversations = (messageId) => dispatch => {
                             fullMessage: parsedBody
                         });
                 }
-            })
+            });
         })
         .catch(err => dispatch({
-                type: ActionConstants.FETCH_CONVERSATIONS_ERROR,
-                error: err
+            type: ActionConstants.FETCH_CONVERSATIONS_ERROR,
+            error: err
         }));
-}
+};
 
 /**
  * Post a conversation to the api
@@ -116,7 +114,7 @@ export const postConversation = (messageId, message, internal, attachements) => 
             dispatch({ type: ActionConstants.CONVERSATION_POST_ERROR, error: err });
         });
 
-}
+};
 
 /**
  * Select one message 
@@ -129,7 +127,7 @@ export const selectMessage = (messageId) => dispatch => {
             type: ActionConstants.SELECT_MESSAGE,
             id: messageId
         });
-}
+};
 
 /**
  * Unselect a message
@@ -140,4 +138,4 @@ export const unSelectMessage = () => dispatch => {
         {
             type: ActionConstants.UNSELECT_MESSAGE
         });
-}
+};
