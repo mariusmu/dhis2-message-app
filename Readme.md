@@ -27,6 +27,13 @@ Add support for embedding images and files onto messages sent by users.
 3. run  ``` npm install ```
 4. run ``` npm run start ```
 
+## Urls
+Read message: http://localhost:3000/?/readMessage.action?id=K1jUMuUrQAq
+Write message:  http://localhost:3000/?/showSendMessage.action
+
+Please note that the Write message functionality only works 
+within the DHIS2 dashboard with the modified vm files (found in DHIS2-dashboard-changes)
+
 # To build
 ```npm run build```
 
