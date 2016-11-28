@@ -17,6 +17,8 @@ class Parent extends React.Component {
     }
     render() {
         var self = this;
+        console.log("coucou");
+        console.log(this.state.data);
 
         if (self.state.type === "reportTables") {
             return(
@@ -84,7 +86,7 @@ class Parent extends React.Component {
         if(this.state.type !== nextProps.type){
             this.setState({searchPivot:''});
         }
-        this.setState({type:nextProps.type});
+        //this.setState({type:nextProps.type});
         this.getGraphsData(nextProps.type, 1, []);
     }
 
@@ -147,7 +149,7 @@ class Parent extends React.Component {
                     }
                 }
 
-                self.setState({data:outputData,savedData:outputData});
+                self.setState({data:outputData,savedData:outputData,type:self.props.type});
 
                 //if we didn't read all the json pages, go to the next one
                 if(page<data.pager.pageCount){
