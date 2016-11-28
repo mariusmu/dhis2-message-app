@@ -42,7 +42,7 @@ within the DHIS2 dashboard with the modified vm files (found in DHIS2-dashboard-
 ## Important!
 If you were to add this to the dhis2 dashboard, then you will need to change some .vm files
 on DHIS2. Please replace the files dhis-live\webapps\dhis\dhis-web-dashboard-integration\ with
-the vm files in the folder "DHIS2-dashboard-changes"
+the vm files in the folder "DHIS2-dashboard-changes". Also copy the stylesheet
 
 # Tests
 We have only tested the reducers, ApiService and Action creators
