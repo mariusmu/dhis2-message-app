@@ -12,8 +12,7 @@ to the message feature.
 Add support for embedding images and files onto messages sent by users.
 
 # Current status
-- Everything is completely implemented is working.
-- Testing needs to be done
+- Implementation complete
 
 # To run
 
