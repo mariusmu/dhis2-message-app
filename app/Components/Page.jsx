@@ -8,7 +8,10 @@ import Menu from './Menu';
 import Footer from './Footer';
 
 
-
+/**
+ * Main component, contains the navigation bar, the body related to the navigation bar
+ * and the footer
+ */
 class Page extends React.Component {
     constructor(props) {
         super(props);
@@ -24,6 +27,11 @@ class Page extends React.Component {
         </div>
         );
     }
+
+    /**
+     * handle menu changes, to display the correct Body view.
+     * @param type (maps, charts, reportTables, about)
+     */
     updateGraphs(type){
         console.log(type);
         this.setState({typeGraph:type});
