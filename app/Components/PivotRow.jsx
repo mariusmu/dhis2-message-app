@@ -47,7 +47,7 @@ class PivotRow extends React.Component {
             this.setState({hidden:'list-group-item',arrowPivot:'fa fa-arrow-down fa-lg'});
 
             //plugin init
-            reportTablePlugin.url = "https://play.dhis2.org/test";
+            reportTablePlugin.url = "http://localhost:8082";
             reportTablePlugin.username = "admin";
             reportTablePlugin.password = "district";
             reportTablePlugin.loadingIndicator = true;

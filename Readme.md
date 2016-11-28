@@ -42,7 +42,9 @@ locally: localhost:3000
 # To build
 ```npm run build```
 
-Notes: running it this way, you will only have tha data presentation working.
+## Notes
+- add localhost:3000 to the CORS white list of your DHIS live
+- running it this way, you will only have tha data presentation working.
 Without a server, the upload step of files fail because of security reason
 (we can't fetch a file on file:// with the different browsers).
 
@@ -62,6 +64,9 @@ locally: webapp on dhis live: localhost:8082
 2. run ``` npm install ``` inside the new folder
 3. run ``` webpack ``` to generate the bundle
 4. run DHIS2 live and go to http://localhost:8082/dhis2-message-app/app/index.tpl.html
+
+## Note
+Very important: run your dhis on localhost:8082, not the default private address!
 
 
 #####################################

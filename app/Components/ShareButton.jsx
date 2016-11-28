@@ -127,7 +127,7 @@ class ShareButton extends React.Component {
             //If the user wants to share a map or a chart
         }else{
             //Find the image by calling the API of DHIS with the id of the image where the user click.
-            var source = "https://play.dhis2.org/test/api/" + this.props.type + "/" + this.props.id + "/data";
+            var source = "http://localhost:8082/api/" + this.props.type + "/" + this.props.id + "/data";
             //Set this new source to the image and set the showmodal to true and close the tooltip
             this.setState({source:source, showModal: true, social:social,show:false });
         }
