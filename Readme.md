@@ -25,9 +25,11 @@ Complete.
 
 
 # To run
-#####################################
-locally: localhost:3000
-#####################################
+
+
+
+# implementation 1: locally: localhost:3000
+
 ## Technologies you will need
 - NodeJS
 
@@ -36,10 +38,10 @@ locally: localhost:3000
 
 ## Steps
 1. run  ``` npm install ```
-2. run ```` npm run start ``
+2. run ``` npm run start ```
 3. localhost:3000
 
-# To build
+## To build
 ```npm run build```
 
 ## Notes
@@ -48,9 +50,11 @@ locally: localhost:3000
 Without a server, the upload step of files fail because of security reason
 (we can't fetch a file on file:// with the different browsers).
 
-######################################
-locally: webapp on dhis live: localhost:8082
-######################################
+
+
+
+# implementation 2: locally: webapp on dhis live: localhost:8082
+
 ## DHIS2
 - a DHIS live instance
 
@@ -67,11 +71,12 @@ locally: webapp on dhis live: localhost:8082
 
 ## Note
 Very important: run your dhis on localhost:8082, not the default private address!
+It might take some time when running for the first time
 
 
-#####################################
-app on dhis test server
-#####################################
+
+# implementation 3: web app on DHIS test server
+
 - zip the content of social sharing folder
 - upload it to dhis test server
 - enjoy =)
