@@ -76,7 +76,7 @@ class Widget extends React.Component {
      * @private
      */
     _getSource(){
-        var source = 'http://' + this.props.username + ':' + this.props.password + '@localhost:8082/api/'+this.state.type+'/'+ this.props.id+'/data';
+        var source = 'https://play.dhis2.org/test/api/'+this.state.type+'/'+ this.props.id+'/data';
         this.setState({source:source});
     }
 

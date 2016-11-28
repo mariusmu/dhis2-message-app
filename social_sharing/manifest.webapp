@@ -1,0 +1,23 @@
+{
+ "version": "0.1",
+ "name": "Social App",
+ "description": "Social App is an extension to easily share favorite data on social medias",
+ "launch_path": "index.html",
+ "appType": "APP",
+ "icons": {
+ "16": "/img/16.png",
+ "48": "/img/48.png",
+ "128": "/img/128.png"
+ },
+ "developer": {
+ "name": "Marius Munthe-Kaas, Julien Vedrenne, Ophélie André",
+ "url": "http://me.com"
+ },
+ "default_locale": "en",
+ "activities": {
+ "dhis": {
+ "href": "*",
+ "namespace": "my-jom"
+ }
+ }
+}

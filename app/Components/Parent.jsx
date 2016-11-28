@@ -100,7 +100,7 @@ class Parent extends React.Component {
 
         var  username = 'admin',
             password = 'district',
-            url = 'http://localhost:8082/api/'+type+'.json?page='+page.toString();
+            url = 'https://play.dhis2.org/test/api/'+type+'.json?page='+page.toString();
 
         var self =this;
 

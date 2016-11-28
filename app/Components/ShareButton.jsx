@@ -127,7 +127,7 @@ class ShareButton extends React.Component {
             //If the user wants to share a map or a chart
         }else{
             //Find the image by calling the API of DHIS with the id of the image where the user click.
-            var source = "http://localhost:8082/api/" + this.props.type + "/" + this.props.id + "/data";
+            var source = "https://play.dhis2.org/test/api/" + this.props.type + "/" + this.props.id + "/data";
             //Set this new source to the image and set the showmodal to true and close the tooltip
             this.setState({source:source, showModal: true, social:social,show:false });
         }
@@ -217,7 +217,7 @@ class ShareButton extends React.Component {
             //var str = JSON.stringify(data, null, 2);
             //console.log("Success\n" + str);
             //Close the modal
-            self._close;
+            self._close();
         }).fail(function(e){
             var errorTxt = JSON.stringify(e, null, 2)
             //$('#result').html("Error\n" + errorTxt).show()
@@ -280,7 +280,7 @@ class ShareButton extends React.Component {
                         complete: function () {
                             console.log("Posted to facebook");
                             // Close the modal when the post is finished
-                            self._close;
+                            self._close();
                         }
                     });
                 }
