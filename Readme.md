@@ -35,7 +35,10 @@ Please note that the Write message functionality only works
 within the DHIS2 dashboard with the modified vm files (found in DHIS2-dashboard-changes)
 
 # To build
-```npm run build```
+1. ```npm run build```
+2. Replace DHIS2 dashboard files with the files in DHIS2-dashboard-changes
+3. Add /dist/assets/bundle.js to DHIS2 (C:\Users\marius\Downloads\dhis2-live (1)\dhis-live\webapps\dhis\dhis-web-dashboard-integration) 
+4. Open DHIS2 dashboard
 
 ## Important!
 If you were to add this to the dhis2 dashboard, then you will need to change some .vm files
