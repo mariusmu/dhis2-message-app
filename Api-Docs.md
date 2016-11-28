@@ -22,6 +22,21 @@ https://dhis2.github.io/dhis2-docs/master/en/developer/html/webapi_plugins.html#
 * SVG TO PNG
 https://dhis2.github.io/dhis2-docs/master/en/developer/html/webapi_svg_conversion.html
 
+* HTML to Image 
+https://github.com/tsayen/dom-to-image
+
+* React Bootstrap 
+https://github.com/react-bootstrap/react-bootstrap/
+
+* OAUth.io 
+https://github.com/oauth-io/oauth-js
+
+* Facebook developper SDK
+https://developers.facebook.com/docs/javascript
+
+* Twitter API 
+https://dev.twitter.com/rest/public
+
 
 
 Common
