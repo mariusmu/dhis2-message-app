@@ -1,4 +1,4 @@
-# Message app
+# Task C (social sharing/message attachment)
 This project is associated with the course INF5057 at the University of Oslo.
 
 # Please look at the branches
