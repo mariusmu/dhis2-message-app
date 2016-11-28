@@ -53,7 +53,7 @@ class AttachmentItem extends React.Component {
      * Download the file
      */
     readFile() {
-        if (this.props.attachment.rev) {
+        if (this.props.attachment) {
             readFile(this.props.attachment.path_display)
                 .then(res => {
                     FileSaver.saveAs(res, this.props.attachment.name);
