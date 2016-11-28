@@ -6,14 +6,16 @@ import React from 'react';
 import Parent from './Parent';
 import About from './About';
 
-
+/**
+ * Body page content component
+ */
 class Body extends React.Component {
     constructor(props) {
         super(props);
         this.state = {type:this.props.type};
     }
     render(){
-
+        //about page
         if(this.state.type === "about"){
             return(
                 <div id="page-content-wrapper">
@@ -23,6 +25,7 @@ class Body extends React.Component {
                 </div>
             );
         }
+        //data (maps/charts/reportTables) page
         else{
             return(
                 <div id="page-content-wrapper">
@@ -33,8 +36,12 @@ class Body extends React.Component {
             );
         }
     }
+
+    /**
+     * when receiving type update from Page, set type state to update view
+     * @param nextProps
+     */
     componentWillReceiveProps(nextProps){
-        console.log("NIQUUE");
         this.setState({type:nextProps.type});
     }
 
