@@ -1,10 +1,10 @@
 import fetchMock from 'fetch-mock';
-import ApiService from '../app/Services/ApiService'
+import ApiService from '../../app/Services/ApiService';
 
 fetchMock.get("http://test.no", { hello: "Hei" }, { headers: { Authorization: "Bearer 1234" } });
 fetchMock.delete("http://test.no", 200);
 fetchMock.get("http://test.no", { hello: "Another token" }, { headers: { Authorization: "Bearer AAFF" } });
-fetchMock.post("http://test.no", 200);
+fetchMock.post("http://test.no", 200, { headers: { Authorization: "Bearer 1234" } });
 
 class TestHelper {
     testAuthenticatedGet(exp, status, uri, token) {
