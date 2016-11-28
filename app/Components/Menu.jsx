@@ -5,7 +5,9 @@
 import React from 'react';
 import {FormControl, FormGroup} from 'react-bootstrap';
 
-
+/**
+ * Menu bar component
+ */
 class Menu extends React.Component {
     constructor(props) {
         super(props);
@@ -36,6 +38,11 @@ class Menu extends React.Component {
             </div>
         );
     }
+
+    /**
+     * When clicking on a category, execute the parent function to handle view changes
+     * @param ev
+     */
     handleChanges(ev){
         console.log(ev.target.id);
         this.props.onChange(ev.target.id);
