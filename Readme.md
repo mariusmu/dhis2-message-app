@@ -34,3 +34,7 @@ Add support for embedding images and files onto messages sent by users.
 If you were to add this to the dhis2 dashboard, then you will need to change some .vm files
 on DHIS2. Please replace the files dhis-live\webapps\dhis\dhis-web-dashboard-integration\ with
 the vm files in the folder "DHIS2-dashboard-changes"
+
+# Tests
+We have only tested the reducers, ApiService and Action creators
+To run the test run ```npm run test```
