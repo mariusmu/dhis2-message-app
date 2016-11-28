@@ -8,6 +8,7 @@ import UrlConstants from "../Constants/UrlConstants";
  * @return{Promise} contining the fileObject, or rejection error
  */
 export const uploadFile = (files) => {
+    //Using fileserver
     return new Promise((resolve, reject) => {
         const xhr =  new XMLHttpRequest();
         var formData = new FormData();
@@ -23,6 +24,7 @@ export const uploadFile = (files) => {
         
         xhr.send(formData);
     });
+    //End using fileserver
     //const dropbox = new Dropbox({ accessToken: SecretConstants.DROPBOX_ACCESS_TOKEN });
     //return dropbox.filesUpload({ path: "/" + uuid.v4() + "/" + file.name, contents: file });
 };
@@ -36,6 +38,8 @@ export const deleteFile = (path) => {
     //const parentPath = path.substr(1, 36);
     //const form = "root=sandbox&path="+parentPath;
     //return ApiService.authenticatedFormPost(form, UrlConstants.DROPBOX_DELETE_FILE, SecretConstants.DROPBOX_ACCESS_TOKEN);
+    
+    //Using fileserver
     return ApiService.unauthenticatedDelete(UrlConstants.FILE_SERVER + "file/delete/" + path);
 };
 
