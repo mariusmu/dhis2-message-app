@@ -4,6 +4,7 @@ This project is associated with the course INF5057 at the University of Oslo.
 Note: This branch only contains the message app. The social sharing app is in its own branch
 
 Note: To make the app work, you also need to install [https://github.com/mariusmu/dhis2-jmo-fileserver]
+You can also you dropbox (then uncomment dropbox lines in file.action.js, and remove the other logic)
 
 This app is made for the DHIS2 platform, and will add extra functionality
 to the message feature.
