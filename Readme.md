@@ -5,7 +5,7 @@ This project is associated with the course INF5057 at the University of Oslo.
 We use branching to split the different apps
 * Master (info)
 * message-app: The message (file upload) app
-* sharing-app: The social sharing app
+* social: The social sharing app
 * shared: the basic setup
 
 # We have also created
