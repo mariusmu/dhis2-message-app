@@ -56,9 +56,27 @@
         <li><span style="padding-left: 10px; display:none;" id="savedMessage" class="tipText">$i18n.getString( "changes_saved" )</span></li>
     </ul>
 </div>
+<h3>
+    <img id="followUp${conversation.id}" style="padding-right:8px; cursor:pointer;"
+         onclick="toggleFollowUp( '${conversation.id}' )"#if( $conversation.followUp ) src="../images/marked.png"#else
+         src="../images/unmarked.png"#end>
+
+    $!encoder.htmlEncode( $conversation.subject )
+</h3>
+<div class="recipientsDiv tipText">
+    <span style="margin-right: 20px" class="pull-left">$i18n.getString( "to" )</span>
+    #set( $recSize = $conversation.topRecipients.size() )
+    #foreach( $user in $conversation.topRecipients )
+        <a class="userLink" href="profile.action?id=${user.uid}">${user.name}</a>#if( $velocityCount < $recSize ), #end
+    #end
+    #if( $conversation.bottomRecipients > 0 ) $i18n.getString( "and" ) $conversation.bottomRecipients $i18n.getString(
+        "more" )#end
+
+</div>
+
 <div id="app"></div>
 <script>
         var ReactDom = ReactDOM;
-        $.getScript("bundle.js?v=1");
+        $.getScript("bundle.js?v=3");
 </script>
       

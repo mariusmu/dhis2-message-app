@@ -67,10 +67,7 @@ class ReadMessage extends React.Component {
         return (
             <div className="">
             
-                <div className="recipientsDiv">
-                    <span className="pull-left to-desc">To: </span>
-                    {toFullNames}
-                </div>
+            
                 <br />
                     {conversations}
                 <WriteResponse shouldRefresh={true} allowInternalReply={true} replyAction={this.reply} />
